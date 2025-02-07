@@ -1,0 +1,11 @@
+# depslib dependency file v1.0
+1738874549 source:d:\escritorio\ayed_verano\tp\gpt\tacti\main.c
+	<stdio.h>
+	<stdlib.h>
+	<time.h>
+
+1738874550 source:c:\users\usuario\desktop\tateti\tomas\tacti\main.c
+	<stdio.h>
+	<stdlib.h>
+	<time.h>
+

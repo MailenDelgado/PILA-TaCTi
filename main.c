@@ -8,16 +8,16 @@ char tablero[3][3];  // Matriz 3x3 para el tablero de juego
 char jugador = 'X';   // El jugador 'X' comienza
 //int esBot = 0;        // 0 si el jugador humano, 1 si el jugador es un bot
 
-// Función para inicializar el tablero
+// FunciÃ³n para inicializar el tablero
 void inicializarTablero() {
     for (int i = 0; i < 3; i++) {
         for (int j = 0; j < 3; j++) {
-            tablero[i][j] = ' ';  // El tablero comienza vacío
+            tablero[i][j] = ' ';  // El tablero comienza vacÃ­o
         }
     }
 }
 
-// Función para imprimir el tablero
+// FunciÃ³n para imprimir el tablero
 void imprimirTablero() {
     printf("\n");
     printf("\tCol Col Col\n");
@@ -36,10 +36,9 @@ void imprimirTablero() {
     printf("\n");
 }
 
-// Función para verificar si hay un ganador
+// FunciÃ³n para verificar si hay un ganador
 int verificarGanador() {
     // Verificar filas
-    int i,c;
     for (int i = 0; i < 3; i++) {
         if (tablero[i][0] == tablero[i][1] && tablero[i][1] == tablero[i][2] && tablero[i][0] != ' ') {
             return 1;
@@ -64,19 +63,19 @@ int verificarGanador() {
     return 0;  // No hay ganador
 }
 
-// Función para verificar si el juego terminó en empate
+// FunciÃ³n para verificar si el juego terminÃ³ en empate
 int verificarEmpate() {
     for (int i = 0; i < 3; i++) {
         for (int j = 0; j < 3; j++) {
             if (tablero[i][j] == ' ') {
-                return 0;  // Hay al menos una casilla vacía
+                return 0;  // Hay al menos una casilla vacÃ­a
             }
         }
     }
-    return 1;  // No hay casillas vacías, es empate
+    return 1;  // No hay casillas vacÃ­as, es empate
 }
 
-// Función para realizar un turno
+// FunciÃ³n para realizar un turno
 void jugarTurno(int opc) {
     int fila, columna;
     if(opc == 1)
@@ -97,12 +96,12 @@ void jugarTurno(int opc) {
         printf("Jugador %c, ingresa fila (1-3) y columna (1-3): ", jugador);
         scanf("%d %d", &fila, &columna);
 
-        // Verificar si la casilla está vacía
+        // Verificar si la casilla estÃ¡ vacÃ­a
         if (tablero[fila-1][columna-1] == ' ') {
             tablero[fila-1][columna-1] = jugador;
         } else {
-            printf("¡Casilla ocupada! Intenta nuevamente.\n");
-            jugarTurno(0);  // Reintentar si la casilla ya está ocupada
+            printf("Â¡Casilla ocupada! Intenta nuevamente.\n");
+            jugarTurno(0);  // Reintentar si la casilla ya estÃ¡ ocupada
             return;
         }
     }
@@ -130,7 +129,7 @@ void cambiarJugador() {
     }
 }
 
-// Función principal
+// FunciÃ³n principal
 int main() {
 
     menu();

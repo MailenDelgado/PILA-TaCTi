@@ -29,6 +29,7 @@ void mostrarLista(const tLista *pl, void(*show)(const void *dato));
 
 
 
-/// prueba 
+/// prueba de commit
+
 void ver (const void *dato);
 #endif // LISTA_H_INCLUDED

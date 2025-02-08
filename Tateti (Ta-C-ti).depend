@@ -63,3 +63,36 @@
 	"menu.h"
 	"funciones.h"
 
+1738949307 source:c:\users\lucas\documents\github\pila-tacti\funciones.c
+	"funciones.h"
+	"lista.h"
+
+1738949307 c:\users\lucas\documents\github\pila-tacti\funciones.h
+
+1738950178 c:\users\lucas\documents\github\pila-tacti\lista.h
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+
+1738949307 source:c:\users\lucas\documents\github\pila-tacti\lista.c
+	"lista.h"
+
+1738949307 source:c:\users\lucas\documents\github\pila-tacti\main.c
+	<stdio.h>
+	<stdlib.h>
+	<time.h>
+
+1738949307 source:c:\users\lucas\documents\github\pila-tacti\menu.c
+	"menu.h"
+	"funciones.h"
+
+1738949307 c:\users\lucas\documents\github\pila-tacti\menu.h
+	<stdio.h>
+	<stdlib.h>
+
+1739035420 source:c:\users\lucas\documents\github\pila-tacti\config\config.c
+	"config.h"
+
+1739032834 c:\users\lucas\documents\github\pila-tacti\config\config.h
+	<stdio.h>
+

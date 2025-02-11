@@ -1,0 +1,22 @@
+# depslib dependency file v1.0
+1738946376 source:c:\users\usuario\desktop\tateti\mailen\integracion\main.c
+	"cabeceraJuego.h"
+
+1739285958 c:\users\usuario\desktop\tateti\mailen\integracion\cabecerajuego.h
+	<stdio.h>
+	<stdlib.h>
+	"cabeceraLista.h"
+
+1739149966 c:\users\usuario\desktop\tateti\mailen\integracion\cabeceralista.h
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+
+1739284629 source:c:\users\usuario\desktop\tateti\mailen\integracion\funcioneslista.c
+	"cabeceraLista.h"
+
+1739285568 source:c:\users\usuario\desktop\tateti\mailen\integracion\funcionesjuego.c
+	"cabeceraJuego.h"
+	"cabeceraLista.h"
+	<time.h>
+

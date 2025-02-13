@@ -27,3 +27,12 @@ int cargarConfig(const char *nombreArchivo, tConfig *confi)
 
     return 1;//TODO_OK
 }
+
+void mostrarConfig(tConfig *confi)
+{
+    printf("===============Configuraciones===============\n");
+    printf("UrlApi: %s\n", confi->url);
+    printf("Codigo del grupo: %s\n", confi->codGrupo);
+    printf("Cantidad de partidas: %u\n", confi->cantPartidas);
+    //printf("URL completa: %s/%s", confi->url, confi->codGrupo);
+}

@@ -14,4 +14,6 @@ typedef struct
 } tConfig;
 
 int cargarConfig(const char *nombreArchivo, tConfig *confi);
+void mostrarConfig(tConfig *confi);
+
 #endif // CONFIG_H_INCLUDED

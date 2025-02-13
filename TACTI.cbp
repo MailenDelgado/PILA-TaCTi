@@ -39,6 +39,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="Lista.h" />
+		<Unit filename="config/config.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="config/config.h" />
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>

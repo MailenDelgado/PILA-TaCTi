@@ -425,7 +425,7 @@ int modificoOrdenLista(const void *pd1, const void *pd2){
     return 1;
 }
 
-int jugar2(void){
+int jugar2(int cantPartidas){
     FILE *pf = fopen("informe-juego_.txt", "wb");
     if(feof(pf))
     {
@@ -434,7 +434,7 @@ int jugar2(void){
     }
     tJugador player, jugadorSacado;
     tLista listaJugadores;
-    int juegoTerminado = 0, opc = 1, partidas = CANT_PARTIDAS, sorteo, i = 0, vecOrden[N] = {0};
+    int juegoTerminado = 0, opc = 1, partidas = cantPartidas, sorteo, i = 0, vecOrden[N] = {0};
     crearLista(&listaJugadores);
     while(opc != 0)
     {
@@ -510,7 +510,7 @@ int jugar2(void){
         fprintf(pf, "Nombre\tPuntos\n");
         fprintf(pf, "%s\t%d\n", player.nombre, player.puntos);
         sacarPrimeroDeLista(&listaJugadores, &jugadorSacado, sizeof(jugadorSacado));
-        partidas = CANT_PARTIDAS;
+        partidas = cantPartidas;
         i--;
     }
     fclose(pf);

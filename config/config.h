@@ -10,7 +10,7 @@ typedef struct
 {
     char url[MAX_URL];
     char codGrupo[MAX_COD];
-    unsigned cantPartidas;
+    int cantPartidas;
 } tConfig;
 
 int cargarConfig(const char *nombreArchivo, tConfig *confi);

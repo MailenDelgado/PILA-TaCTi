@@ -37,7 +37,7 @@ int verificarEmpate(void);
 
 int jugar(void);
 
-int jugar2(void);
+int jugar2(int cantPartidas);
 int ingresarJugadores(tLista *pl, void *pd, unsigned tam, int *val);
 
 #endif // JUEGO_H_INCLUDED

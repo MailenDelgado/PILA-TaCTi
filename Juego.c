@@ -1,4 +1,4 @@
-#include "TACTI/Juego.h"
+#include "Juego.h"
 
 char tablero[3][3];  // Matriz 3x3 para el tablero de juego
 char jugador = 'X';   // El jugador 'X' comienza

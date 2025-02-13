@@ -1,4 +1,4 @@
-#include "TACTI\Lista.h"
+#include "Lista.h"
 
 void crearLista(tLista *pl){
     *pl = NULL;

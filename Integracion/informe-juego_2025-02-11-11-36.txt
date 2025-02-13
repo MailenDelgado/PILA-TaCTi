@@ -1,0 +1,44 @@
+JUGADOR: Delgado            
+Partida: 1
+Ganador: Delgado   
+Puntaje: 3
+TABLERO:
+ X | X | X 
+---+---+---
+ O |   |   
+---+---+---
+   |   | O 
+-----------------------------------
+JUGADOR: Delgado            
+Partida: 2
+Ganador: Delgado   
+Puntaje: 3
+TABLERO:
+ X | O |   
+---+---+---
+ X |   |   
+---+---+---
+ X |   | O 
+-----------------------------------
+JUGADOR: Mailen             
+Partida: 1
+Ganador: Mailen    
+Puntaje: 3
+TABLERO:
+   | O |   
+---+---+---
+ X | X | X 
+---+---+---
+   |   | O 
+-----------------------------------
+JUGADOR: Mailen             
+Partida: 2
+Ganador: Mailen    
+Puntaje: 3
+TABLERO:
+ X | X | O 
+---+---+---
+ X |   | O 
+---+---+---
+   |   | O 
+-----------------------------------

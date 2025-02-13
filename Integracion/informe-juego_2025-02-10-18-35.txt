@@ -1,0 +1,44 @@
+JUGADOR: len                
+Partida: 1
+Ganador: len       
+Puntaje: 3
+TABLERO:
+   | X | O 
+---+---+---
+   | X |   
+---+---+---
+ O | X |   
+-----------------------------------
+JUGADOR: len                
+Partida: 2
+Ganador: MAQUINA   
+Puntaje: -1
+TABLERO:
+ O | O | X 
+---+---+---
+   | X |   
+---+---+---
+ X |   |   
+-----------------------------------
+JUGADOR: mai                
+Partida: 1
+Ganador: mai       
+Puntaje: 3
+TABLERO:
+ O |   | X 
+---+---+---
+ X | O |   
+---+---+---
+   | X | O 
+-----------------------------------
+JUGADOR: mai                
+Partida: 2
+Ganador: mai       
+Puntaje: 3
+TABLERO:
+ X | X | X 
+---+---+---
+ O |   |   
+---+---+---
+   |   | O 
+-----------------------------------

@@ -1,21 +1,23 @@
 #include "Juego.h"
 
-char tablero[3][3];  // Matriz 3x3 para el tablero de juego
-char jugador = 'X';   // El jugador 'X' comienza
+//char tablero[3][3];  // Matriz 3x3 para el tablero de juego
+//char jugador = 'X';   // El jugador 'X' comienza
 
 //Funciones de jugadas bot
-int intentarGanar(int *f, int *c){
+int intentarGanar(int *f, int *c, char tablero[3][3], char *jugador){
+
+
     // Verificar filas
-    for (int i = 0; i < 3; i++) {
-        if (tablero[i][0] == tablero[i][1] && tablero[i][0] != ' ' && tablero[i][0] == jugador && tablero[i][2] == ' ') {
+    for (int i = 0; i < 3; i+=3) {
+        if (tablero[i][0] == tablero[i][1] && tablero[i][0] != ' ' && tablero[i][0] == *jugador && tablero[i][2] == ' ') {
             *f = i+1;
             *c = 3;
             return 1;
-        }else if(tablero[i][1] == tablero[i][2] && tablero[i][1] != ' ' && tablero[i][1] == jugador && tablero[i][0] == ' '){
+        }else if(tablero[i][1] == tablero[i][2] && tablero[i][1] != ' ' && tablero[i][1] == *jugador && tablero[i][0] == ' '){
             *f = i+1;
             *c = 1;
             return 1;
-        }else if(tablero[i][0] == tablero[i][2] && tablero[i][0] != ' ' && tablero[i][0] == jugador && tablero[i][1] == ' '){
+        }else if(tablero[i][0] == tablero[i][2] && tablero[i][0] != ' ' && tablero[i][0] == *jugador && tablero[i][1] == ' '){
             *f = i+1;
             *c = 2;
             return 1;
@@ -24,15 +26,15 @@ int intentarGanar(int *f, int *c){
 
     // Verificar columnas
     for (int i = 0; i < 3; i++) {
-        if (tablero[0][i] == tablero[1][i] && tablero[0][i] != ' ' && tablero[0][i] == jugador && tablero[2][i] == ' ') {
+        if (tablero[0][i] == tablero[1][i] && tablero[0][i] != ' ' && tablero[0][i] == *jugador && tablero[2][i] == ' ') {
             *f = 3;
             *c = i+1;
             return 1;
-        }else if(tablero[1][i] == tablero[2][i] && tablero[1][i] != ' ' && tablero[1][i] == jugador && tablero[0][i] == ' '){
+        }else if(tablero[1][i] == tablero[2][i] && tablero[1][i] != ' ' && tablero[1][i] == *jugador && tablero[0][i] == ' '){
             *f = 1;
             *c = i+1;
             return 1;
-        }else if(tablero[0][i] == tablero[2][i] && tablero[0][i] != ' ' && tablero[0][i] == jugador && tablero[1][i] == ' '){
+        }else if(tablero[0][i] == tablero[2][i] && tablero[0][i] != ' ' && tablero[0][i] == *jugador && tablero[1][i] == ' '){
             *f = 2;
             *c = i+1;
             return 1;
@@ -40,29 +42,29 @@ int intentarGanar(int *f, int *c){
     }
 
     // Verificar diagonales
-    if (tablero[0][0] == tablero[1][1] && tablero[0][0] != ' ' && tablero[0][0] == jugador && tablero[2][2] == ' ') {
+    if (tablero[0][0] == tablero[1][1] && tablero[0][0] != ' ' && tablero[0][0] == *jugador && tablero[2][2] == ' ') {
         *f = 3;
         *c = 3;
         return 1;
     }
-    if(tablero[1][1] == tablero[2][2] && tablero[1][1] != ' ' && tablero[1][1] == jugador && tablero[0][0] == ' '){
+    if(tablero[1][1] == tablero[2][2] && tablero[1][1] != ' ' && tablero[1][1] == *jugador && tablero[0][0] == ' '){
         *f = 1;
         *c = 1;
         return 1;
     }
-    if(tablero[0][0] == tablero[2][2] && tablero[0][0] != ' ' && tablero[0][0] == jugador && tablero[1][1] == ' '){
+    if(tablero[0][0] == tablero[2][2] && tablero[0][0] != ' ' && tablero[0][0] == *jugador && tablero[1][1] == ' '){
         *f = 2;
         *c = 2;
         return 1;
     }
 
-    if (tablero[0][2] == tablero[1][1] && tablero[0][2] != ' ' && tablero[0][2] == jugador && tablero[2][0] == ' '){
+    if (tablero[0][2] == tablero[1][1] && tablero[0][2] != ' ' && tablero[0][2] == *jugador && tablero[2][0] == ' '){
         *f = 3;
         *c = 1;
         return 1;
     }
 
-    if(tablero[1][1] == tablero[2][0] && tablero[1][1] != ' ' && tablero[1][1] == jugador && tablero[0][2] == ' '){
+    if(tablero[1][1] == tablero[2][0] && tablero[1][1] != ' ' && tablero[1][1] == *jugador && tablero[0][2] == ' '){
         *f = 1;
         *c = 3;
         return 1;
@@ -70,18 +72,19 @@ int intentarGanar(int *f, int *c){
     return 0;
 }
 
-int bloquearVictoria(int *f, int *c){
+int bloquearVictoria(int *f, int *c, char tablero[3][3], char *jugador){
+
     // Verificar filas
     for (int i = 0; i < 3; i++) {
-        if (tablero[i][0] == tablero[i][1] && tablero[i][0] != ' ' && tablero[i][0] != jugador && tablero[i][2] == ' ') {
+        if (tablero[i][0] == tablero[i][1] && tablero[i][0] != ' ' && tablero[i][0] != *jugador && tablero[i][2] == ' ') {
             *f = i+1;
             *c = 3;
             return 1;
-        }else if(tablero[i][1] == tablero[i][2] && tablero[i][1] != ' ' && tablero[i][1] != jugador && tablero[i][0] == ' '){
+        }else if(tablero[i][1] == tablero[i][2] && tablero[i][1] != ' ' && tablero[i][1] != *jugador && tablero[i][0] == ' '){
             *f = i+1;
             *c = 1;
             return 1;
-        }else if(tablero[i][0] == tablero[i][2] && tablero[i][0] != ' ' && tablero[i][0] != jugador && tablero[i][1] == ' '){
+        }else if(tablero[i][0] == tablero[i][2] && tablero[i][0] != ' ' && tablero[i][0] != *jugador && tablero[i][1] == ' '){
             *f = i+1;
             *c = 2;
             return 1;
@@ -90,15 +93,15 @@ int bloquearVictoria(int *f, int *c){
 
     // Verificar columnas
     for (int i = 0; i < 3; i++) {
-        if (tablero[0][i] == tablero[1][i] && tablero[0][i] != ' ' && tablero[0][i] != jugador && tablero[2][i] == ' ') {
+        if (tablero[0][i] == tablero[1][i] && tablero[0][i] != ' ' && tablero[0][i] != *jugador && tablero[2][i] == ' ') {
             *f = 3;
             *c = i+1;
             return 1;
-        }else if(tablero[1][i] == tablero[2][i] && tablero[1][i] != ' ' && tablero[1][i] != jugador && tablero[0][i] == ' '){
+        }else if(tablero[1][i] == tablero[2][i] && tablero[1][i] != ' ' && tablero[1][i] != *jugador && tablero[0][i] == ' '){
             *f = 1;
             *c = i+1;
             return 1;
-        }else if(tablero[0][i] == tablero[2][i] && tablero[0][i] != ' ' && tablero[0][i] != jugador && tablero[1][i] == ' '){
+        }else if(tablero[0][i] == tablero[2][i] && tablero[0][i] != ' ' && tablero[0][i] != *jugador && tablero[1][i] == ' '){
             *f = 2;
             *c = i+1;
             return 1;
@@ -106,29 +109,29 @@ int bloquearVictoria(int *f, int *c){
     }
 
     // Verificar diagonales
-    if (tablero[0][0] == tablero[1][1] && tablero[0][0] != ' ' && tablero[0][0] != jugador && tablero[2][2] == ' ') {
+    if (tablero[0][0] == tablero[1][1] && tablero[0][0] != ' ' && tablero[0][0] != *jugador && tablero[2][2] == ' ') {
         *f = 3;
         *c = 3;
         return 1;
     }
-    if(tablero[1][1] == tablero[2][2] && tablero[1][1] != ' ' && tablero[1][1] != jugador && tablero[0][0] == ' '){
+    if(tablero[1][1] == tablero[2][2] && tablero[1][1] != ' ' && tablero[1][1] != *jugador && tablero[0][0] == ' '){
         *f = 1;
         *c = 1;
         return 1;
     }
-    if(tablero[0][0] == tablero[2][2] && tablero[0][0] != ' ' && tablero[0][0] != jugador && tablero[1][1] == ' '){
+    if(tablero[0][0] == tablero[2][2] && tablero[0][0] != ' ' && tablero[0][0] != *jugador && tablero[1][1] == ' '){
         *f = 2;
         *c = 2;
         return 1;
     }
 
-    if (tablero[0][2] == tablero[1][1] && tablero[0][2] != ' ' && tablero[0][2] != jugador && tablero[2][0] == ' '){
+    if (tablero[0][2] == tablero[1][1] && tablero[0][2] != ' ' && tablero[0][2] != *jugador && tablero[2][0] == ' '){
         *f = 3;
         *c = 1;
         return 1;
     }
 
-    if(tablero[1][1] == tablero[2][0] && tablero[1][1] != ' ' && tablero[1][1] != jugador && tablero[0][2] == ' '){
+    if(tablero[1][1] == tablero[2][0] && tablero[1][1] != ' ' && tablero[1][1] != *jugador && tablero[0][2] == ' '){
         *f = 1;
         *c = 3;
         return 1;
@@ -137,7 +140,7 @@ int bloquearVictoria(int *f, int *c){
 }
 
 // Función para inicializar el tablero
-void inicializarTablero() {
+void inicializarTablero(char tablero[3][3]) {
     for (int i = 0; i < 3; i++) {
         for (int j = 0; j < 3; j++) {
             tablero[i][j] = ' ';  // El tablero comienza vacío
@@ -146,7 +149,7 @@ void inicializarTablero() {
 }
 
 // Función para imprimir el tablero
-void imprimirTablero() {
+void imprimirTablero(char tablero[3][3]) {
     printf("\n");
     printf("\tCol Col Col\n");
     printf("\t 1   2   3\n");
@@ -164,7 +167,7 @@ void imprimirTablero() {
     printf("\n");
 }
 
-void imprimirTableroEnArchivo(FILE *pf) {
+void imprimirTableroEnArchivo(FILE *pf, char tablero[3][3]) {
     fprintf(pf, "\n");
     fprintf(pf, "\tCol Col Col\n");
     fprintf(pf, "\t 1   2   3\n");
@@ -183,7 +186,7 @@ void imprimirTableroEnArchivo(FILE *pf) {
 }
 
 // Función para verificar si hay un ganador
-int verificarGanador() {
+int verificarGanador(char tablero[3][3]) {
     // Verificar filas
     for (int i = 0; i < 3; i++) {
         if (tablero[i][0] == tablero[i][1] && tablero[i][1] == tablero[i][2] && tablero[i][0] != ' ') {
@@ -205,12 +208,11 @@ int verificarGanador() {
     if (tablero[0][2] == tablero[1][1] && tablero[1][1] == tablero[2][0] && tablero[0][2] != ' ') {
         return 1;
     }
-
     return 0;  // No hay ganador
 }
 
 // Función para verificar si el juego terminó en empate
-int verificarEmpate() {
+int verificarEmpate(char tablero[3][3]) {
     for (int i = 0; i < 3; i++) {
         for (int j = 0; j < 3; j++) {
             if (tablero[i][j] == ' ') {
@@ -222,14 +224,14 @@ int verificarEmpate() {
 }
 
 // Función para realizar un turno
-void jugarTurno(int opc) {
-    int fila, columna;
+void jugarTurno(int opc, char tablero[3][3], char *jugador) {
+        int fila, columna;
     if(opc == 1)
     {
-        if(bloquearVictoria(&fila, &columna)== 1){
+        if(intentarGanar(&fila, &columna, tablero, jugador)== 1){
             printf("El bot ha jugado en la casilla (%d, %d)\n", fila, columna);
         }
-        else if(intentarGanar(&fila, &columna)== 1){
+        else if(bloquearVictoria(&fila, &columna, tablero, jugador)== 1){
             printf("El bot ha jugado en la casilla (%d, %d)\n", fila, columna);
         }
         else{
@@ -248,19 +250,19 @@ void jugarTurno(int opc) {
     }
     else{
         // Jugador: ingresar fila y columna
-        printf("Jugador %c, ingresa fila (1-3) y columna (1-3): ", jugador);
+        printf("Jugador %c, ingresa fila (1-3) y columna (1-3): ", *jugador);
         scanf("%d %d", &fila, &columna);
 
         // Verificar si la casilla está vacía
         if (tablero[fila-1][columna-1] == ' ') {
-            tablero[fila-1][columna-1] = jugador;
+            tablero[fila-1][columna-1] = *jugador;
         }else{
             printf("¡Casilla ocupada! Intenta nuevamente.\n");
-            jugarTurno(0);  // Reintentar si la casilla ya está ocupada
+            jugarTurno(0, tablero, jugador);  // Reintentar si la casilla ya está ocupada
             return;
         }
     }
-    tablero[fila-1][columna-1] = jugador;
+    tablero[fila-1][columna-1] = *jugador;
 }
 
 // Sorteo de simbolo
@@ -308,14 +310,14 @@ void sorteoOrden(int n, int *vec){
 }
 
 // Cambiar de jugador
-void cambiarJugador() {
-    if (jugador == 'X') {
-        jugador = 'O';
+void cambiarJugador(char *jugador) {
+    if (*jugador == 'X') {
+        *jugador = 'O';
     } else {
-        jugador = 'X';
+        *jugador = 'X';
     }
 }
-
+/*
 int jugar(void){
     FILE *pf = fopen("puntajes.txt", "wb");
     if(feof(pf))
@@ -405,7 +407,7 @@ int jugar(void){
     fclose(pf);
     return 0;
 }
-
+*/
 int comparoPorOrden(const void *d1, const void *d2){
     tJugador *jug1 = (tJugador*)d1;
     tJugador *jug2 = (tJugador*)d2;
@@ -425,8 +427,17 @@ int modificoOrdenLista(const void *pd1, const void *pd2){
     return 1;
 }
 
-int jugar2(int cantPartidas){
-    FILE *pf = fopen("informe-juego_.txt", "wb");
+int jugar2(int cantPartidas){ //VERSION ACTUALIZADA DE FUNCION JUGAR
+    char tablero[3][3];  // Matriz 3x3 para el tablero de juego
+    time_t t = time(NULL);
+    struct tm tm = *localtime(&t);
+    char nombrearch[40];
+    char jugador;
+    sprintf(nombrearch,"informe-juego_%04d-%02d-%02d-%02d-%02d.txt", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min);
+
+    FILE *pf = fopen(nombrearch,"wt");
+
+//    FILE *pf = fopen("informe-juego_.txt", "wb");
     if(feof(pf))
     {
         printf("Error archivo");
@@ -461,23 +472,23 @@ int jugar2(int cantPartidas){
                 printf("%s listo para jugar? ([1] SI, [0] no): ", player.nombre);
                 scanf("%d", &opc);
             }
-            inicializarTablero();
+            inicializarTablero(tablero);///MODIFICADA
 //            player.puntos += 0;
             while (!juegoTerminado) {
-                imprimirTablero();
+                imprimirTablero(tablero);///MODIFICADA
 
                 if (opc && sorteo == 0 && jugador == 'X') {
-                    jugarTurno(1);  // El bot juega si es su turno
+                    jugarTurno(1, tablero, &jugador);  /// El bot juega si es su turno MODIFICADA
                 } else if (opc && sorteo == 1 && jugador == 'X'){
-                jugarTurno(0);  // El jugador humano juega si es su turno
+                jugarTurno(0, tablero, &jugador);  /// El jugador humano juega si es su turno MODIFICADA
                 }else if((opc && sorteo == 0 && jugador == 'O')){
-                    jugarTurno(0);  // El bot juega si es su turno
+                    jugarTurno(0, tablero, &jugador);  /// El bot juega si es su turno MODIFICADA
                 }else if((opc == 1 && sorteo == 1 && jugador == 'O')){
-                    jugarTurno(1);  // El jugador humano juega si es su turno
+                    jugarTurno(1, tablero, &jugador);  /// El jugador humano juega si es su turno MODIFICADA
                 }
-                if (verificarGanador()) {
-                    imprimirTablero();
-                    imprimirTableroEnArchivo(pf);
+                if (verificarGanador(tablero)) {
+                    imprimirTablero(tablero);///MODIFICADA
+                    imprimirTableroEnArchivo(pf, tablero);///MODIFICADA
                     printf("Jugador %c ha ganado\n", jugador);
                     if((jugador == 'X' && sorteo == 0)||(jugador == 'O' && sorteo == 1))
                     {
@@ -491,15 +502,15 @@ int jugar2(int cantPartidas){
                     }
 
                     juegoTerminado = 1;
-                } else if (verificarEmpate()) {
-                    imprimirTablero();
-                    imprimirTableroEnArchivo(pf);
+                } else if (verificarEmpate(tablero)) {
+                    imprimirTablero(tablero);///MODIFICADA
+                    imprimirTableroEnArchivo(pf, tablero);///MODIFICADA
                     printf("Empate. El juego ha terminado.\n");
                     fprintf(pf, "Empate. %s suma 2 puntos\n", player.nombre);
                     player.puntos += EMPATE;
                     juegoTerminado = 1;
                 } else {
-                    cambiarJugador();  // Cambiar al siguiente jugador
+                    cambiarJugador(&jugador);  // Cambiar al siguiente jugador
                 }
             }
             cambiarSorteo(&sorteo);

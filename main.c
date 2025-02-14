@@ -15,7 +15,10 @@ void menu(void){
     tConfig confi;
 
     cargarConfig(NOMBRE_ARCH_CONFIG, &confi);
-    printf("Eliga una opcion: \n[A]Jugar\n[B]Ver ranking equipo\n[C]Salir\n");
+    printf("\n\t===================================================\n");
+    printf("\n\t\t\tJuego Tateti (Ta-C-ti)\n\n");
+    printf("\tEliga una opcion:\n\t[A]Jugar\n\t[B]Ver ranking equipo\n\t[C]Salir\n");
+    printf("\n\t===================================================\n");
     scanf("%s", &op);
     if(op == 'A' || op == 'a')
     {

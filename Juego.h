@@ -19,21 +19,21 @@ typedef struct{
     unsigned orden;
 }tJugador;
 
-int bloquearVictoria(int *f, int *c);
+int bloquearVictoria(int *f, int *c, char tablero[3][3], char *jugador);
 void cambiarSorteo(int *sorteo);
-void cambiarJugador(void);
+void cambiarJugador(char *jugador);
 int comparoPorOrden(const void *d1, const void *d2);
 int imprimoOrden(const void *d1, const void *d2);
-void imprimirTablero(void);
-void imprimirTableroEnArchivo(FILE *);
-void inicializarTablero(void);
-int intentarGanar(int *f, int *c);
-void jugarTurno(int opc);
+void imprimirTablero(char tablero[3][3]);
+void imprimirTableroEnArchivo(FILE *, char tablero[3][3]);
+void inicializarTablero(char tablero[3][3]);
+int intentarGanar(int *f, int *c, char tablero[3][3], char *jugador);
+void jugarTurno(int opc, char tablero[3][3], char *jugador);
 int modificoOrdenLista(const void *pd1, const void *pd2);
 int sorteoSimbolo(void);
 void sorteoOrden(int n, int *vec);
-int verificarGanador(void);
-int verificarEmpate(void);
+int verificarGanador(char tablero[3][3]);
+int verificarEmpate(char tablero[3][3]);
 
 int jugar(void);
 

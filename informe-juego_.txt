@@ -1,0 +1,33 @@
+Partida/s de lucas
+
+	Col Col Col
+	 1   2   3
+Fila 1	 O | X | X 
+	---+---+---
+Fila 2	 X | O | O 
+	---+---+---
+Fila 3	 O | X | X 
+
+Empate. lucas suma 2 puntos
+
+	Col Col Col
+	 1   2   3
+Fila 1	 O | X | X 
+	---+---+---
+Fila 2	 X | O | O 
+	---+---+---
+Fila 3	 X | O | X 
+
+Empate. lucas suma 2 puntos
+
+	Col Col Col
+	 1   2   3
+Fila 1	 X | O | X 
+	---+---+---
+Fila 2	   | X | O 
+	---+---+---
+Fila 3	 O |   | X 
+
+lucas ha ganado. Suma 3 puntos
+Nombre	Puntos
+lucas	7

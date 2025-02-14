@@ -7,13 +7,13 @@ int cargarConfig(const char *nombreArchivo, tConfig *confi)
     pf = fopen(nombreArchivo, "rt");
     if(!pf)
     {
-        puts("Error al abrir el archivo de configuración");
+        puts("Error al abrir el archivo de configuracion");
         return 0;//ERROR_ARCH
     }
     if(fscanf(pf,"%259[^|]|%50[^\n]", confi->url, confi->codGrupo) != 2)
     {
         fclose(pf);
-        puts("Error al leer la configuración (URL y Código).");
+        puts("Error al leer la configuracion (URL y Código).");
         return 0; // ERROR_ARCH
     }
     if(fscanf(pf, "%d", &confi->cantPartidas) != 1)

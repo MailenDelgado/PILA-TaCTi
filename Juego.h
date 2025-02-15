@@ -1,43 +1,77 @@
 #ifndef JUEGO_H_INCLUDED
 #define JUEGO_H_INCLUDED
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
 #include "Lista.h"
-
-#define VICTORIA 3
-#define EMPATE 2
-#define DERROTA -1
-#define CANT_PARTIDAS 2
-#define MINIMO(X, Y) ((X) < (Y) ? (X) : (Y))
-#define N 100//NRO_MAXIMO_DE_JUGADORES
+#include <time.h>
+#define TAMNOMBRE 20
+#define TAM 3
 
 typedef struct{
-    char nombre[20];
-    unsigned puntos;
-    unsigned orden;
+    char nombre[TAMNOMBRE];
+    int puntos;
 }tJugador;
 
-int bloquearVictoria(int *f, int *c, char tablero[3][3], char *jugador);
-void cambiarSorteo(int *sorteo);
-void cambiarJugador(char *jugador);
-int comparoPorOrden(const void *d1, const void *d2);
-int imprimoOrden(const void *d1, const void *d2);
-void imprimirTablero(char tablero[3][3]);
-void imprimirTableroEnArchivo(FILE *, char tablero[3][3]);
-void inicializarTablero(char tablero[3][3]);
+typedef struct{
+    int numPartida;
+    int numJugador;
+    char jugador[TAMNOMBRE];
+    char tablero[TAM][TAM];
+    int puntaje;
+    char ganador[TAMNOMBRE];
+}tPartida;
+
+void menu();
+
+int iniciarJuego();
+
+int jugar(char tablero[TAM][TAM]);
+
+int ingresoJugadores(tLista *list_jugadores, int *cantidad);
+
+void inicializarTablero(char tablero[TAM][TAM]);
+
+void imprimirTablero( char tablero[TAM][TAM]);
+
+int verificarGanador( char tablero[TAM][TAM]);
+
+int verificarEmpate( char tablero[TAM][TAM]);
+
+void jugarTurno( char tablero[TAM][TAM],char jugador, int opc);
+
 int intentarGanar(int *f, int *c, char tablero[3][3], char *jugador);
-void jugarTurno(int opc, char tablero[3][3], char *jugador);
-int modificoOrdenLista(const void *pd1, const void *pd2);
-int sorteoSimbolo(void);
-void sorteoOrden(int n, int *vec);
-int verificarGanador(char tablero[3][3]);
-int verificarEmpate(char tablero[3][3]);
 
-int jugar(void);
+int bloquearVictoria(int *f, int *c, char tablero[3][3], char *jugador);
 
-int jugar2(int cantPartidas);
-int ingresarJugadores(tLista *pl, void *pd, unsigned tam, int *val);
+int verificafilacol(int fila, int columna);
+
+int sortearJugadores(tLista *list_jugadores, int cantidad, int *orden);
+
+char sortearSimbolo();
+
+void sorteo(int *indices, int n);
+
+int generarInforme(tLista *list_partidas, tLista *list_jugadores);
+
+void generarRanking(tLista *pl, FILE *pf);
+
+void guardarPartida(tLista *list_partidas, char tablero[TAM][TAM],int numPartida, int numJugador,const char *ganador, int puntaje, tJugador jugador);
+
+void verJugador (const void *dato);
+
+void actualizardato(void *dest, const void *org);
+
+int comparoPorPuntaje(const void *d1, const void *d2);
+
+void imprimirTableroEnArchivo(FILE *pf, char tablero[3][3]);
+
+int imprimoRanking(const void *d1, const void *d2);
+
+int imprimoRankingEnArchivo(const void *d1, const void *d2);
+
+void enviarAAPI(tLista * list_jugadores, char *urlApi);
+
+void lecturaDeConfiguracion();
+
+void verRanking();
 
 #endif // JUEGO_H_INCLUDED

@@ -1,0 +1,71 @@
+JUGADOR: tomas              
+Partida: 1
+Ganador: EMPATE    
+Puntaje: 2
+TABLERO:
+ O | X | O 
+---+---+---
+ X | O | X 
+---+---+---
+ X | O | X 
+-----------------------------------
+JUGADOR: tomas              
+Partida: 2
+Ganador: EMPATE    
+Puntaje: 2
+TABLERO:
+ X | O | X 
+---+---+---
+ X | O | O 
+---+---+---
+ O | X | X 
+-----------------------------------
+JUGADOR: carlos             
+Partida: 1
+Ganador: carlos    
+Puntaje: 3
+TABLERO:
+ O | X | O 
+---+---+---
+ X | O |   
+---+---+---
+ O | X | X 
+-----------------------------------
+JUGADOR: carlos             
+Partida: 2
+Ganador: EMPATE    
+Puntaje: 2
+TABLERO:
+ X | O | X 
+---+---+---
+ X | O | O 
+---+---+---
+ O | X | X 
+-----------------------------------
+JUGADOR: diego              
+Partida: 1
+Ganador: MAQUINA   
+Puntaje: -1
+TABLERO:
+ O |   | X 
+---+---+---
+ O | X |   
+---+---+---
+ X |   |   
+-----------------------------------
+JUGADOR: diego              
+Partida: 2
+Ganador: EMPATE    
+Puntaje: 2
+TABLERO:
+ O | X | X 
+---+---+---
+ X | O | O 
+---+---+---
+ O | X | X 
+-----------------------------------
+	Ranking
+	Nombre 	Puntos
+	carlos	5   
+	tomas	4   
+	diego	1   

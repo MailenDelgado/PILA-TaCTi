@@ -1,48 +1,86 @@
 #include "Lista.h"
 
-void crearLista(tLista *pl){
+void crearLista(tLista* pl){
     *pl = NULL;
 }
 
-int ponerEnLista(tLista *pl, const void *pd, unsigned tam){
-    tNodo *nue = (tNodo *)malloc(sizeof(tNodo));
-    if(!nue || !(nue->info = malloc(tam)))
+int listaVacia(const tLista* pl){
+    return *pl == NULL;
+}
+
+int listaLlena(const tLista* pl, unsigned cantbyte){
+    tNodo *aux = (tNodo*)malloc(sizeof(tNodo));
+    void *dato = malloc(cantbyte);
+    free(dato);
+    free(aux);
+    return aux == NULL || dato == NULL;
+}
+
+int vaciarLista(tLista* pl){
+    tNodo *elim;
+    while (*pl)
     {
-        free(nue);
-        return 0;
+        elim = *pl;
+        *pl = elim->sig;
+        free(elim->info);
+        free(elim);
     }
-    memcpy(nue->info, pd, tam);
-    nue->tamInfo = tam;
+    return BIEN;
+}
+
+int ponerEnLista(tLista* pl, const void* dato, unsigned cantbyte){
+    while(*pl){
+        pl=&(*pl)->sig;
+    }
+
+    tNodo *nue = (tNodo*)malloc(sizeof(tNodo));
+    if(!nue)
+    {
+        printf("no se pudo reservar memoria1");
+        return SIN_MEMORIA;
+    }
+    nue->info= malloc(cantbyte);
+    if(!nue->info)
+    {
+        printf("no se pudo reservar memoria2");
+        free(nue);
+        return SIN_MEMORIA;
+    }
+    memcpy(nue->info, dato, cantbyte);
+    nue->tamInfo = cantbyte;
     nue->sig = *pl;
     *pl = nue;
-    return 1;
+
+    return BIEN;
 }
 
-int sacarPrimeroDeLista(tLista *pl, void *pd, unsigned tam){
-    if(!(*pl))
-        return 0;//PILA_VACIA
-    tNodo *aux = *pl;
-    *pl = aux->sig;
-    memcpy(pd, aux->info, MINIMO(tam, aux->tamInfo));
-    free(aux->info);
-    free(aux);
-    return 1;
+int sacarDeLista(tLista* pl, void* dato, unsigned cantbyte){
+    tNodo *elim = *pl;
+
+    if(elim == NULL)
+        return 0;
+    *pl = elim->sig;
+    memcpy(dato, elim->info, MINIMO(cantbyte, elim->tamInfo));
+    free(elim->info);
+    free(elim);
+
+    return BIEN;
 }
 
-int verPrimeroDeLista(tLista *pl, void *pd, unsigned tam){
-    if(!(*pl))
-        return 0;//PILA_VACIA
-    memcpy(pd, (*pl)->info, MINIMO(tam, (*pl)->tamInfo));
-    return 1;
+void mostrarLista(const tLista *pl, void(*show)(const void *dato)){
+    while (*pl)
+    {
+        show((*pl)->info);
+        pl = &(*pl)->sig;
+    }
 }
-
 
 void recorroLista(tLista *pl, void *pd, unsigned tam, int (*accion)(const void *, const void *)){
-    int i = 0;
+//    int i = 0;
     while(*pl)
     {
-        accion((*pl)->info, pd + i);
-        i += sizeof(int);
+        accion((*pl)->info, pd);
+//        i += tam;
         pl = &(*pl)->sig;
     }
 }
@@ -53,12 +91,12 @@ void ordenarLista(tLista *pl, int (*cmp)(const void *, const void*)){
         return;
     while((*pl)->sig)
     {
-        if(cmp((*pl)->info, (*pl)->sig->info) > 0)
+        if(cmp((*pl)->info, (*pl)->sig->info) < 0)
         {
             tLista *q = pri;
             tNodo *aux = (*pl)->sig;
             (*pl)->sig = aux->sig;
-            while(cmp((*q)->info, aux->info) < 0)
+            while(cmp((*q)->info, aux->info) > 0)
                 q = &(*q)->sig;
             aux->sig = *q;
             *q = aux;
@@ -67,4 +105,32 @@ void ordenarLista(tLista *pl, int (*cmp)(const void *, const void*)){
             pl = &(*pl)->sig;
     }
 }
+
+void *buscarporPos(const tLista *pl, int pos){
+        int i=0;
+
+        while(*pl && i<pos){
+            pl = &(*pl)->sig;
+            i++;
+        }
+
+        return (*pl)->info;
+
+}
+
+int actualizaEnPosLista(tLista *pl, const void *dato, unsigned cantbyte, int pos, void (*actualizardato)(void *dest, const void *org)){
+    int i=0;
+
+    while(*pl && i<pos){
+        pl=&(*pl)->sig;
+        i++;
+    }
+    if(i==pos && *pl){
+    actualizardato((*pl)->info, dato);
+    return BIEN;
+    }
+    return 0; //no encontró la posicion
+
+}
+
 

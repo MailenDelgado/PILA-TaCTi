@@ -1,0 +1,14 @@
+JUGADOR: tomas              
+Partida: 1
+Ganador: EMPATE    
+Puntaje: 1
+TABLERO:
+ X | X | O 
+---+---+---
+ O | O | X 
+---+---+---
+ X | X | O 
+-----------------------------------
+	Ranking
+	Nombre 	Puntos
+	tomas	1   

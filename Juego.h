@@ -75,4 +75,7 @@ void lecturaDeConfiguracion();
 
 void verRanking();
 
+
+int finalizaJuego(char tablero[3][3], char *jugador, int *opc, int band);
+
 #endif // JUEGO_H_INCLUDED

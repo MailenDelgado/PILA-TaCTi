@@ -25,77 +25,75 @@ void menu(void){
 }
 
 int iniciarJuego(){
-    int cantPartidas;
-    tLista list_jugadores;
-    tLista list_partidas;
+    int cantidadJugadores=0,
+        cantPartidas,
+        i = 0,
+        njugador=0,
+        *orden,
+        *porden,
+        resultado;
+    char ganador[10],
+         tablero[TAM][TAM];
+    tLista  list_jugadores,
+            list_partidas;
     tConfig config;
     tJugador *jugador;//es un puntero porque en realidad es el jugador encontrado en la lista
     cargarConfig("D:\\Documentos\\GitHub\\PILA-TaCTi\\config\\config.txt", &config);
     cantPartidas = config.cantPartidas;
-    int cantidadJugadores=0,
-        i=0,
-        njugador=0,
-        resultado,
-        *orden,
-        *porden;
-    char ganador[10],
-         tablero[TAM][TAM];
+    resultado = ingresoJugadores(&list_jugadores,&cantidadJugadores) ;
 
-        resultado= ingresoJugadores(&list_jugadores,&cantidadJugadores) ;
-        if(!resultado) //si no se ingresaron jugadores vuelve al menu
+    if(!resultado) //si no se ingresaron jugadores vuelve al menu
         return 0;
+    orden= malloc(cantidadJugadores * sizeof(int));
 
-        orden= malloc(cantidadJugadores * sizeof(int));
-
-        if (orden == NULL) {
+    if (orden == NULL){
         printf("Error al asignar memoria para vector de Orden\n");
         return 0;
-        }
+    }
 
-        porden = orden;
+    porden = orden;
 
-        // Inicializa la semilla para los números aleatorios
-        srand(time(NULL));
-        sortearJugadores(&list_jugadores,cantidadJugadores,orden);
+    // Inicializa la semilla para los números aleatorios
+    srand(time(NULL));
+    sortearJugadores(&list_jugadores,cantidadJugadores,orden);
 
-        crearLista(&list_partidas);
-        system("cls");
+    crearLista(&list_partidas);
+    system("cls");
 
-        //Partidas
-        do{
-            jugador = buscarporPos(&list_jugadores,*porden); //obtener jugador
+    //Partidas
+    do{
+        jugador = buscarporPos(&list_jugadores,*porden); //obtener jugador
 
+        for(i=0;i<cantPartidas;i++){
+            printf("\n\tTurno de: %s. Partida %d de %d", jugador->nombre,i+1,cantPartidas);
+            resultado = jugar(tablero);
 
-            for(i=0;i<cantPartidas;i++){
-                printf("\n\tTurno de: %s. Partida %d de %d", jugador->nombre,i+1,cantPartidas);
-                resultado=jugar(tablero);
-
-                if(!resultado){
+            if(!resultado){
                 free(orden);
                 vaciarLista(&list_jugadores);
                 return 0;
-                }
-
-                jugador->puntos+=resultado; //actualizo puntaje y lo muestro
-                printf("\nPuntaje de %s es %d\n",jugador->nombre, jugador->puntos );
-                system("pause");
-                if(resultado == 3){
-                    strcpy(ganador,jugador->nombre);
-                }
-                else if(resultado == -1){
-                    strcpy(ganador,"MAQUINA");
-                }
-                else{
-                    strcpy(ganador,"EMPATE");
-                }
-                guardarPartida(&list_partidas,tablero,i+1,*porden,ganador,resultado,*jugador);
             }
 
-            actualizaEnPosLista(&list_jugadores,jugador,sizeof(tJugador), *porden, actualizardato); //actualizo el puntaje del jugador en la lista
+            jugador->puntos += resultado; //actualizo puntaje y lo muestro
+            printf("\nPuntaje de %s es %d\n",jugador->nombre, jugador->puntos );
+            system("pause");
+            if(resultado == 3){
+                strcpy(ganador,jugador->nombre);
+            }
+            else if(resultado == -1){
+                strcpy(ganador,"MAQUINA");
+            }
+            else{
+                strcpy(ganador,"EMPATE");
+            }
+            guardarPartida(&list_partidas,tablero,i+1,*porden,ganador,resultado,*jugador);
+        }
 
-            porden++;
-            njugador++;
-        }while( njugador < cantidadJugadores );
+        actualizaEnPosLista(&list_jugadores,jugador,sizeof(tJugador), *porden, actualizardato); //actualizo el puntaje del jugador en la lista
+
+        porden++;
+        njugador++;
+    }while( njugador < cantidadJugadores );
 
     free(orden);
 
@@ -117,24 +115,21 @@ int ingresoJugadores(tLista *list_jugadores, int *cantidad){
 
     do
     {
-    system("cls");
-    printf("\t\t\t----------------\n");
-    printf("ingrese los nombres de los jugadores o para terminar ingrese 0: \n");
+        system("cls");
+        printf("\t\t\t----------------\n");
+        printf("Ingrese los nombres de los jugadores o para terminar ingrese 0: \n");
 
-    scanf("%19s", jugador.nombre);
-    jugador.puntos = 0; //inicializo todos los puntajes en 0
-    r=listaLlena(list_jugadores, sizeof(tJugador));
+        scanf("%19s", jugador.nombre);
+        jugador.puntos = 0; //inicializo todos los puntajes en 0
+        r=listaLlena(list_jugadores, sizeof(tJugador));
 
-    if( !r && strcmp(jugador.nombre,"0") ){ ///Si la lista no está llena y el nombre del jugador no es 0
-
-       ponerEnLista(list_jugadores, &jugador, sizeof(tJugador));
-       (*cantidad)++;
-    }
-    else if (r){
-                printf(" Error al ingresar nombre, LISTA LLENA ");
-                return 0;
-            }
-
+        if (!r && strcmp(jugador.nombre,"0")){ ///Si la lista no está llena y el nombre del jugador no es 0
+            ponerEnLista(list_jugadores, &jugador, sizeof(tJugador));
+            (*cantidad)++;
+        }else if(r){
+            printf("Error al ingresar nombre, LISTA LLENA ");
+            return 0;
+        }
     }while(strcmp(jugador.nombre, "0"));
 
     if(!*cantidad){
@@ -145,18 +140,13 @@ int ingresoJugadores(tLista *list_jugadores, int *cantidad){
 
 // Sorteo de jugadores
 int sortearJugadores(tLista *list_jugadores, int cantidad, int *orden) {
-
     int i;
-
     tJugador *jugador;
-
     sorteo(orden, cantidad);
-
     system("cls");
-
     printf("\n\t\t\tOrden aleatorio de jugadores:\n");
     printf("\n\t\t\t------------------------------\n");
-    for ( i = 0; i < cantidad; i++) {
+    for (i = 0; i < cantidad; i++) {
         jugador = (tJugador *)buscarporPos(list_jugadores,orden[i]);
         printf(" Jugador %d: %s\n", i + 1, jugador->nombre);
     }
@@ -172,7 +162,6 @@ void sorteo(int *indices, int n) { ///fisher yates: algoritmo de desordenamiento
     for (i = 0; i < n; i++) {
         indices[i] = i;
     }
-
     for (i = n - 1; i > 0; i--) { // empieza desde el ultimo
         j = rand() % (i + 1); //elije un indice aleatorio entre 0 e i
         temp = indices[i];
@@ -182,10 +171,10 @@ void sorteo(int *indices, int n) { ///fisher yates: algoritmo de desordenamiento
 }
 
 int jugar(char tablero[TAM][TAM]){
-
-    int juegoTerminado = 0;
-    int opc=0, band=0;
-    char jugador= sortearSimbolo();
+    int juegoTerminado = 0,
+        opc = 0,
+        band = 0;
+    char jugador = sortearSimbolo();
 
     while(opc != 1)
     {
@@ -201,25 +190,23 @@ int jugar(char tablero[TAM][TAM]){
     }
     inicializarTablero(tablero);
 
-    if ( jugador == 'X') {
-            band=1;
-            opc = 0;  // El jugador humano juega si es su turno
-            printf("\n\t Sos la X, empezas vos\n");
-        }
-        else {
-            opc = 1; // El bot juega si es su turno
-            jugador ='X'; //EL BOT EMPIEZA CON LA X
-            printf("\n\t Sos el O, empieza la maquina\n");
-        }
+    if (jugador == 'X') {
+        band = 1;
+        opc = 0;  // El jugador humano juega si es su turno
+        printf("\n\t Sos la X, empezas vos\n");
+    }else{
+        opc = 1; // El bot juega si es su turno
+        jugador ='X'; //EL BOT EMPIEZA CON LA X
+        printf("\n\t Sos el O, empieza la maquina\n");
+    }
     printf("\t-------------------------\n");
     system("pause");
     system("cls");
-    while (!juegoTerminado) {
-        imprimirTablero(tablero);
-
+    while (!juegoTerminado){
+        juegoTerminado = finalizaJuego(tablero, &jugador, &opc, band);
+/*        imprimirTablero(tablero);
         jugarTurno(tablero,jugador,opc);
-
-        if (verificarGanador(tablero)) {
+        if (verificarGanador(tablero)){
             imprimirTablero(tablero);
             printf("Jugador %c ha ganado\n", jugador);
             juegoTerminado = 1;
@@ -231,19 +218,18 @@ int jugar(char tablero[TAM][TAM]){
                 return (jugador == 'O')?3:-1;
             }
 
-        } else if (verificarEmpate(tablero)) {
+        }else if (verificarEmpate(tablero)) {
             imprimirTablero(tablero);
             printf("Empate. El juego ha terminado.\n");
             juegoTerminado = 1;
-
             return 2;
-            }
-        if (!juegoTerminado) {
-        opc = (opc == 1) ? 0 : 1;   // Cambia entre 1 y 0 para alternar el turno entre humano y maquina
-        jugador = (jugador == 'X')? 'O' : 'X';// Cambia entre X y O para alternar el turno
         }
+        if (!juegoTerminado) {
+            opc = (opc == 1) ? 0 : 1;   // Cambia entre 1 y 0 para alternar el turno entre humano y maquina
+            jugador = (jugador == 'X')? 'O' : 'X';// Cambia entre X y O para alternar el turno
+        }*/
     }
-    return 0;
+    return juegoTerminado;
 }
 
 char sortearSimbolo(void) {
@@ -266,8 +252,8 @@ void imprimirTablero(char tablero[3][3]) {
     printf("\t 1   2   3\n");
 
     for (int i = 0; i < 3; i++) {
-            printf("Fila %d",i+1);
-            printf("\t");
+        printf("Fila %d",i+1);
+        printf("\t");
         for (int j = 0; j < 3; j++) {
             printf(" %c ", tablero[i][j]);
             if (j < 2) printf("|");
@@ -279,8 +265,9 @@ void imprimirTablero(char tablero[3][3]) {
 }
 
 void jugarTurno(char tablero[TAM][TAM],char jugador,int opc) {
-
-    int fila, columna,r;
+    int columna,
+        fila,
+        r;
     if(opc == 1)
     {
         if(intentarGanar(&fila, &columna, tablero, &jugador)== 1){
@@ -291,7 +278,6 @@ void jugarTurno(char tablero[TAM][TAM],char jugador,int opc) {
         }
         else{
             // Bot: elegir un movimiento aleatorio
-//            srand(time(NULL));
             int movimientoValido = 0;
             while (!movimientoValido) {
                 fila = rand() % 3 + 1;
@@ -305,12 +291,12 @@ void jugarTurno(char tablero[TAM][TAM],char jugador,int opc) {
     } else {
         // Jugador: ingresar fila y columna
         do{
-        printf("Jugador %c, ingresa fila (1-3) y columna (1-3): ", jugador);
-        scanf("%d %d", &fila, &columna);
-        r=verificafilacol(fila,columna);
-        if(!r){
-            printf("Ingrese un numero de fila y columna validos, separados por un espacio.\n");
-        }
+            printf("Jugador %c, ingresa fila (1-3) y columna (1-3): ", jugador);
+            scanf("%d %d", &fila, &columna);
+            r = verificafilacol(fila,columna);
+            if(!r){
+                printf("Ingrese un numero de fila y columna validos, separados por un espacio.\n");
+            }
         }while(!r);
         // Verificar si la casilla está vacía
         if (tablero[fila-1][columna-1] == ' ') {
@@ -509,7 +495,6 @@ int verificarEmpate(char tablero[3][3]) {
 void guardarPartida(tLista *list_partidas, char tablero[TAM][TAM],int numPartida, int numJugador ,const char *ganador, int puntaje, tJugador jugador){
     int result;
     tPartida partida;
-
     memcpy(partida.tablero, tablero, sizeof(partida.tablero));
     partida.numJugador=numJugador;
     partida.puntaje=puntaje;
@@ -525,14 +510,17 @@ void guardarPartida(tLista *list_partidas, char tablero[TAM][TAM],int numPartida
 }
 
 int generarInforme(tLista *list_partidas, tLista *list_jugadores){
+    char nombrearch[40];
+    int i,
+        j,
+        result;
+    time_t t = time(NULL);
+    struct tm tm = *localtime(&t);
     tPartida partida;
-    int result,i,j;
-     time_t t = time(NULL);
-     struct tm tm = *localtime(&t);
-     char nombrearch[40];
-     sprintf(nombrearch,"informe-juego_%04d-%02d-%02d-%02d-%02d.txt", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min);
 
-     FILE *pl = fopen(nombrearch,"wt");
+    sprintf(nombrearch,"informe-juego_%04d-%02d-%02d-%02d-%02d.txt", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min);
+
+    FILE *pl = fopen(nombrearch,"wt");
 
     if(!pl){
         printf("\nError al crear el informe");
@@ -542,7 +530,6 @@ int generarInforme(tLista *list_partidas, tLista *list_jugadores){
     result=sacarDeLista(list_partidas,&partida,sizeof(partida));
 
     while(result!=0){
-
         fprintf(pl,"JUGADOR: %-19s\nPartida: %d\nGanador: %-10s\nPuntaje: %d\n",partida.jugador,partida.numPartida,partida.ganador,partida.puntaje);
 
           // Escribir el tablero de la partida
@@ -626,3 +613,29 @@ void verJugador (const void *dato){
     printf("%s        %d\n", jugador->nombre, jugador->puntos);
 }
 
+int finalizaJuego(char tablero[3][3], char *jugador, int *opc, int band)
+{
+    int juegoTerminado = 0;
+    imprimirTablero(tablero);
+    jugarTurno(tablero, *jugador, *opc);
+    if (verificarGanador(tablero)){
+        imprimirTablero(tablero);
+        printf("Jugador %c ha ganado\n", *jugador);
+        juegoTerminado = 1;
+        if(band == 1){ //X ES EL HUMANO
+            juegoTerminado = (*jugador == 'X')?3:-1;
+        }
+        else{
+            juegoTerminado = (*jugador == 'O')?3:-1;
+        }
+    }else if (verificarEmpate(tablero)) {
+        imprimirTablero(tablero);
+        printf("Empate. El juego ha terminado.\n");
+        juegoTerminado = 2;
+    }
+    if (!juegoTerminado) {
+            *opc = (*opc == 1) ? 0 : 1;   // Cambia entre 1 y 0 para alternar el turno entre humano y maquina
+            *jugador = (*jugador == 'X')? 'O' : 'X';// Cambia entre X y O para alternar el turno
+    }
+    return juegoTerminado;
+}

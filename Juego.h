@@ -2,6 +2,7 @@
 #define JUEGO_H_INCLUDED
 
 #include "Lista.h"
+#include "config/config.h"
 #include <time.h>
 #define TAMNOMBRE 20
 #define TAM 3

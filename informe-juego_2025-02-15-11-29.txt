@@ -1,0 +1,25 @@
+JUGADOR: tomas              
+Partida: 1
+Ganador: MAQUINA   
+Puntaje: -1
+TABLERO:
+ O |   | X 
+---+---+---
+   | O | X 
+---+---+---
+ X | O | X 
+-----------------------------------
+JUGADOR: tomas              
+Partida: 2
+Ganador: EMPATE    
+Puntaje: 2
+TABLERO:
+ O | X | X 
+---+---+---
+ X | O | O 
+---+---+---
+ X | O | X 
+-----------------------------------
+	Ranking
+	Nombre 	Puntos
+	tomas	1   

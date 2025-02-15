@@ -1,7 +1,5 @@
 #include "Juego.h"
 
-#define CANTJUEGOS 2
-
 void menu(void){
     char op;
     printf("Eliga una opcion: \n[A]Jugar\n[B]Ver ranking equipo\n[C]Salir\n");
@@ -27,10 +25,13 @@ void menu(void){
 }
 
 int iniciarJuego(){
-
+    int cantPartidas;
     tLista list_jugadores;
     tLista list_partidas;
+    tConfig config;
     tJugador *jugador;//es un puntero porque en realidad es el jugador encontrado en la lista
+    cargarConfig("D:\\Documentos\\GitHub\\PILA-TaCTi\\config\\config.txt", &config);
+    cantPartidas = config.cantPartidas;
     int cantidadJugadores=0,
         i=0,
         njugador=0,
@@ -65,8 +66,8 @@ int iniciarJuego(){
             jugador = buscarporPos(&list_jugadores,*porden); //obtener jugador
 
 
-            for(i=0;i<CANTJUEGOS;i++){
-                printf("\n\tTurno de: %s. Partida %d de %d", jugador->nombre,i+1,CANTJUEGOS );
+            for(i=0;i<cantPartidas;i++){
+                printf("\n\tTurno de: %s. Partida %d de %d", jugador->nombre,i+1,cantPartidas);
                 resultado=jugar(tablero);
 
                 if(!resultado){

@@ -84,9 +84,9 @@ void recuperar_de_api(void) {
                         cJSON *nombre = cJSON_GetObjectItem(jugador, "nombreJugador");
                         cJSON *puntos = cJSON_GetObjectItem(jugador, "puntaje");
 
-                        if (nombre && puntos) {
-                            printf("Jugador: %s, Puntos: %d\n", nombre->valuestring, puntos->valueint);
-                        }
+//                        if (nombre && puntos) {
+//                            printf("Jugador: %s, Puntos: %d\n", nombre->valuestring, puntos->valueint);
+//                        }
                         memcpy(jug.nombre, nombre->valuestring, sizeof(jug.nombre));
                         jug.puntos = puntos->valueint;
                         ponerEnLista(&listaJug, &jug, sizeof(tJugador));
@@ -97,7 +97,8 @@ void recuperar_de_api(void) {
         }
     }
     ordenarLista(&listaJug, comparoPorPuntaje);
-    recorroLista(&listaJug, NULL, 0, mostrarJugadores);
+    printf("\n\t     Ranking: \n\tNombre:\tPuntos:\n");
+    recorroLista(&listaJug, NULL, 0, imprimoRanking);
     // Liberar memoria
     curl_easy_cleanup(curl);
     free(chunk.response);

@@ -35,6 +35,7 @@ void mostrarLista(const tLista *pl, void(*show)(const void *dato)){
 
 // Funci�n para recuperar los datos de la API
 void recuperar_de_api(void) {
+    system("cls");/// limpiamos la pantalla
     tLista listaJug;
     tJugador jug;
     crearLista(&listaJug);

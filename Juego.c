@@ -99,10 +99,6 @@ int iniciarJuego(){
 
     free(orden);
 
-    printf("\n\n\tRESULTADOS");
-    printf("\n\t----------");
-    mostrarLista(&list_jugadores, verJugador);
-    system("pause");
     generarInforme(&list_partidas, &list_jugadores);
 
     vaciarLista(&list_jugadores);
@@ -570,11 +566,8 @@ int generarInforme(tLista *list_partidas, tLista *list_jugadores){
 
 void generarRanking(tLista *pl, FILE *pf){
     ordenarLista(pl, comparoPorPuntaje);
-    printf("\tRanking\n");
-    printf("\tNombre \tPuntos\n");
     fprintf(pf, "\tRanking\n");
     fprintf(pf,"\tNombre \tPuntos\n");
-    recorroLista(pl, NULL, 0, imprimoRanking);
     recorroLista(pl, pf, 0, imprimoRankingEnArchivo);
 }
 

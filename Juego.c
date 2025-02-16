@@ -512,12 +512,12 @@ void guardarPartida(tLista *list_partidas, char tablero[TAM][TAM],int numPartida
 
 int generoAPI(const void *a, const void *b){
     tJugador *jugador = (tJugador*)a;
-    char array = *(char *)b;
-    strcpy(array, jugador->nombre);
+    enviar_a_api((char*)b,jugador->nombre, jugador->puntos);
+    return 1;
 }
 
 int generarInforme(tLista *list_partidas, tLista *list_jugadores){
-    char nombrearch[40], codigoGrupo = "PILAR", array[] = {};
+    char nombrearch[40], codigoGrupo[] = "PILAR";
     int i,
         j,
         result;
@@ -556,13 +556,10 @@ int generarInforme(tLista *list_partidas, tLista *list_jugadores){
         result=sacarDeLista(list_partidas,&partida,sizeof(partida));
      }
      generarRanking(list_jugadores, pl);
-     recorroLista(&list_jugadores, &array, 0, generoAPI);
+     recorroLista(list_jugadores, codigoGrupo, 0, generoAPI);
      fclose(pl);
      return 0;
 }
-
-
-
 
 void generarRanking(tLista *pl, FILE *pf){
     ordenarLista(pl, comparoPorPuntaje);

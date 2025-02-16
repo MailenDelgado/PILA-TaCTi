@@ -1,0 +1,38 @@
+JUGADOR: carlos             
+Partida: 1
+Ganador: EMPATE    
+Puntaje: 2
+TABLERO:
+ O | X | O 
+---+---+---
+ O | X | X 
+---+---+---
+ X | O | X 
+-----------------------------------
+JUGADOR: diego              
+Partida: 1
+Ganador: EMPATE    
+Puntaje: 2
+TABLERO:
+ X | O | X 
+---+---+---
+ X | X | O 
+---+---+---
+ O | X | O 
+-----------------------------------
+JUGADOR: tomas              
+Partida: 1
+Ganador: EMPATE    
+Puntaje: 2
+TABLERO:
+ O | X | O 
+---+---+---
+ X | O | X 
+---+---+---
+ X | O | X 
+-----------------------------------
+	Ranking
+	Nombre 	Puntos
+	tomas	2   
+	carlos	2   
+	diego	2   

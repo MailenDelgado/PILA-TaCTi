@@ -129,8 +129,5 @@ int actualizaEnPosLista(tLista *pl, const void *dato, unsigned cantbyte, int pos
     actualizardato((*pl)->info, dato);
     return BIEN;
     }
-    return 0; //no encontró la posicion
-
+    return 0; //no encontro la posicion
 }
-
-

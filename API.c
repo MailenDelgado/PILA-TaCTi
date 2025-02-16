@@ -1,6 +1,6 @@
 #include "API.h"
 
-// Función de escritura para manejar la respuesta de cURL
+// Funciï¿½n de escritura para manejar la respuesta de cURL
 size_t write_callback(void *data, size_t size, size_t nmemb, void *userp) {
     size_t total_size = size * nmemb;
     struct Memory *mem = (struct Memory *)userp;
@@ -33,8 +33,8 @@ void mostrarLista(const tLista *pl, void(*show)(const void *dato)){
     printf("%s\t%d\n", jugador->nombre, jugador->puntos);
 }
 
-// Función para recuperar los datos de la API
-void recuperar_de_api() {
+// Funciï¿½n para recuperar los datos de la API
+void recuperar_de_api(void) {
     tLista listaJug;
     tJugador jug;
     crearLista(&listaJug);
@@ -60,32 +60,16 @@ void recuperar_de_api() {
 
     CURLcode res = curl_easy_perform(curl);
     if (res != CURLE_OK) {
-        fprintf(stderr, "Error en la petición GET: %s\n", curl_easy_strerror(res));
+        fprintf(stderr, "Error en la peticion GET: %s\n", curl_easy_strerror(res));
     } else {
 //        printf("Respuesta de la API:\n%s\n", chunk.response);
 
-        // Validar si la respuesta está vacía o solo contiene "[]"
+        // Validar si la respuesta estï¿½ vacï¿½a o solo contiene "[]"
         if (chunk.response == NULL || strlen(chunk.response) == 0 || strcmp(chunk.response, "[]") == 0) {
             printf("No hay datos disponibles en la API.\n");
         } else {
             // Parsear JSON
             cJSON *json_respuesta = cJSON_Parse(chunk.response);
-            int array_size = cJSON_GetArraySize(json_respuesta);
-
-            cJSON *json_items[array_size];
-
-//            }
-//            qsort(json_items, array_size, sizeof(cJSON *), comparar_puntajes);
-
-//            for (int i = 0; i < json_items; i++) {
-//                cJSON *jugador = cJSON_GetArrayItem(json_items, i);
-//                cJSON *nombre = cJSON_GetObjectItem(jugador, "nombreJugador");
-//                cJSON *puntos = cJSON_GetObjectItem(jugador, "puntaje");
-//
-//                if (nombre && puntos) {
-//                    printf("Jugador: %s, Puntos: %d\n", nombre->valuestring, puntos->valueint);
-//                }
-//            }
 
             if (!json_respuesta) {
                 printf("Error al parsear JSON: %s\n", cJSON_GetErrorPtr());
@@ -103,7 +87,7 @@ void recuperar_de_api() {
                         if (nombre && puntos) {
                             printf("Jugador: %s, Puntos: %d\n", nombre->valuestring, puntos->valueint);
                         }
-                        memcpy(jug.nombre, nombre->valuestring, sizeof(nombre->valuestring));
+                        memcpy(jug.nombre, nombre->valuestring, sizeof(jug.nombre));
                         jug.puntos = puntos->valueint;
                         ponerEnLista(&listaJug, &jug, sizeof(tJugador));
                     }
@@ -113,16 +97,16 @@ void recuperar_de_api() {
         }
     }
     ordenarLista(&listaJug, comparoPorPuntaje);
-    recorroLista(&listaJug, NULL, 0, mostrarLista);
+    recorroLista(&listaJug, NULL, 0, mostrarJugadores);
     // Liberar memoria
     curl_easy_cleanup(curl);
     free(chunk.response);
 }
 
-// Función para enviar los datos a la API
+// Funciï¿½n para enviar los datos a la API
 void enviar_a_api(const char *codigoGrupo, const char *nombreJugador, int puntos) {
 
-    // Crear el objeto JSON raíz
+    // Crear el objeto JSON raï¿½z
     cJSON *json_raiz = cJSON_CreateObject();
     cJSON_AddStringToObject(json_raiz, "CodigoGrupo", codigoGrupo);
 
@@ -136,7 +120,7 @@ void enviar_a_api(const char *codigoGrupo, const char *nombreJugador, int puntos
     // Agregar el jugador al array
     cJSON_AddItemToArray(array_jugadores, json_jugador);
 
-    // Agregar el array al objeto raíz
+    // Agregar el array al objeto raï¿½z
     cJSON_AddItemToObject(json_raiz, "Jugadores", array_jugadores);
 
     // Convertir a cadena JSON
@@ -167,7 +151,7 @@ void enviar_a_api(const char *codigoGrupo, const char *nombreJugador, int puntos
         curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
         curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
 
-        // Ejecutar la petición
+        // Ejecutar la peticiï¿½n
         res = curl_easy_perform(curl);
 
         long response_code;

@@ -13,7 +13,7 @@ int cargarConfig(const char *nombreArchivo, tConfig *confi)
     if(fscanf(pf,"%259[^|]|%50[^\n]", confi->url, confi->codGrupo) != 2)
     {
         fclose(pf);
-        puts("Error al leer la configuracion (URL y Código).");
+        puts("Error al leer la configuracion (URL y Cï¿½digo).");
         return 0; // ERROR_ARCH
     }
     if(fscanf(pf, "%d", &confi->cantPartidas) != 1)

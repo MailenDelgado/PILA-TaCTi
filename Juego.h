@@ -21,9 +21,9 @@ typedef struct{
     char ganador[TAMNOMBRE];
 }tPartida;
 
-void menu();
+void menu(void);
 
-int iniciarJuego();
+int iniciarJuego(void);
 
 int jugar(char tablero[TAM][TAM]);
 
@@ -47,13 +47,15 @@ int verificafilacol(int fila, int columna);
 
 int sortearJugadores(tLista *list_jugadores, int cantidad, int *orden);
 
-char sortearSimbolo();
+char sortearSimbolo(void);
 
 void sorteo(int *indices, int n);
 
 int generarInforme(tLista *list_partidas, tLista *list_jugadores);
 
 void generarRanking(tLista *pl, FILE *pf);
+
+int mostrarJugadores(const void *, const void *);
 
 void guardarPartida(tLista *list_partidas, char tablero[TAM][TAM],int numPartida, int numJugador,const char *ganador, int puntaje, tJugador jugador);
 
@@ -69,12 +71,9 @@ int imprimoRanking(const void *d1, const void *d2);
 
 int imprimoRankingEnArchivo(const void *d1, const void *d2);
 
-void enviarAAPI(tLista * list_jugadores, char *urlApi);
+void lecturaDeConfiguracion(void);
 
-void lecturaDeConfiguracion();
-
-void verRanking();
-
+void verRanking(void);
 
 int finalizaJuego(char tablero[3][3], char *jugador, int *opc, int band);
 

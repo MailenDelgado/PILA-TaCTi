@@ -1,4 +1,5 @@
 #include "Juego.h"
+#include "API.h"
 
 void menu(void){
     char op;
@@ -53,7 +54,7 @@ int iniciarJuego(){
 
     porden = orden;
 
-    // Inicializa la semilla para los números aleatorios
+    // Inicializa la semilla para los nï¿½meros aleatorios
     srand(time(NULL));
     sortearJugadores(&list_jugadores,cantidadJugadores,orden);
 
@@ -123,7 +124,7 @@ int ingresoJugadores(tLista *list_jugadores, int *cantidad){
         jugador.puntos = 0; //inicializo todos los puntajes en 0
         r=listaLlena(list_jugadores, sizeof(tJugador));
 
-        if (!r && strcmp(jugador.nombre,"0")){ ///Si la lista no está llena y el nombre del jugador no es 0
+        if (!r && strcmp(jugador.nombre,"0")){ ///Si la lista no estï¿½ llena y el nombre del jugador no es 0
             ponerEnLista(list_jugadores, &jugador, sizeof(tJugador));
             (*cantidad)++;
         }else if(r){
@@ -166,7 +167,7 @@ void sorteo(int *indices, int n) { ///fisher yates: algoritmo de desordenamiento
         j = rand() % (i + 1); //elije un indice aleatorio entre 0 e i
         temp = indices[i];
         indices[i] = indices[j];
-        indices[j] = temp; //intercambia el último con el indice elegido
+        indices[j] = temp; //intercambia el ï¿½ltimo con el indice elegido
     }
 }
 
@@ -234,14 +235,14 @@ int jugar(char tablero[TAM][TAM]){
 
 char sortearSimbolo(void) {
     int orden[2];
-    sorteo(orden, 2);                    //EL PRIMER ELEMENTO ES EL SIMBOLO CON EL QUE EMPEZARÁ EL USUARIO
+    sorteo(orden, 2);                    //EL PRIMER ELEMENTO ES EL SIMBOLO CON EL QUE EMPEZARï¿½ EL USUARIO
     return (orden[0] == 0) ? 'O' : 'X'; //Si no hubo intercambio de indices entonces el usuario empieza con O, sino con X.
 }
 
 void inicializarTablero(char tablero[3][3]) {
     for (int i = 0; i < 3; i++) {
         for (int j = 0; j < 3; j++) {
-            tablero[i][j] = ' ';  // El tablero comienza vacío
+            tablero[i][j] = ' ';  // El tablero comienza vacï¿½o
         }
     }
 }
@@ -298,12 +299,12 @@ void jugarTurno(char tablero[TAM][TAM],char jugador,int opc) {
                 printf("Ingrese un numero de fila y columna validos, separados por un espacio.\n");
             }
         }while(!r);
-        // Verificar si la casilla está vacía
+        // Verificar si la casilla estï¿½ vacï¿½a
         if (tablero[fila-1][columna-1] == ' ') {
             tablero[fila-1][columna-1] = jugador;
         } else {
             printf("Casilla ocupada. Intenta nuevamente.\n");
-            jugarTurno(tablero, jugador, 0);  // Reintentar si la casilla ya está ocupada
+            jugarTurno(tablero, jugador, 0);  // Reintentar si la casilla ya estï¿½ ocupada
             return;
         }
     }
@@ -453,7 +454,7 @@ int verificafilacol(int fila, int columna){
     return 1;
 }
 
-// Función para verificar si hay un ganador
+// Funciï¿½n para verificar si hay un ganador
 int verificarGanador(char tablero[3][3]) {
     // Verificar filas
     for (int i = 0; i < 3; i++) {
@@ -480,16 +481,16 @@ int verificarGanador(char tablero[3][3]) {
     return 0;  // No hay ganador
 }
 
-// Función para verificar si el juego terminó en empate
+// Funciï¿½n para verificar si el juego terminï¿½ en empate
 int verificarEmpate(char tablero[3][3]) {
     for (int i = 0; i < 3; i++) {
         for (int j = 0; j < 3; j++) {
             if (tablero[i][j] == ' ') {
-                return 0;  // Hay al menos una casilla vacía
+                return 0;  // Hay al menos una casilla vacï¿½a
             }
         }
     }
-    return 1;  // No hay casillas vacías, es empate
+    return 1;  // No hay casillas vacï¿½as, es empate
 }
 
 void guardarPartida(tLista *list_partidas, char tablero[TAM][TAM],int numPartida, int numJugador ,const char *ganador, int puntaje, tJugador jugador){
@@ -509,6 +510,11 @@ void guardarPartida(tLista *list_partidas, char tablero[TAM][TAM],int numPartida
     }
 }
 
+int mostrarJugadores(const void *a, const void *b){
+   tJugador * jug = (tJugador *)a;
+   enviar_a_api((char*)b, jug->nombre, jug->puntos);
+   return 1;
+}
 
 int generoAPI(const void *a, const void *b){
     tJugador *jugador = (tJugador*)a;
@@ -646,10 +652,3 @@ int finalizaJuego(char tablero[3][3], char *jugador, int *opc, int band){
     }
     return juegoTerminado;
 }
-/*
-  verRanking(){
-    recuperar_de_api();
-}
-
-    enviar_a_api(codgrupo, nom, puntos);
-*/

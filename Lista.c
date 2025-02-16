@@ -67,14 +67,6 @@ int sacarDeLista(tLista* pl, void* dato, unsigned cantbyte){
     return BIEN;
 }
 
-/*void mostrarLista(const tLista *pl, void(*show)(const void *dato)){
-    while (*pl)
-    {
-        show((*pl)->info);
-        pl = &(*pl)->sig;
-    }
-}*/
-
 void recorroLista(tLista *pl, void *pd, unsigned tam, int (*accion)(const void *, const void *)){
 
     while(*pl)
@@ -135,8 +127,5 @@ int actualizaEnPosLista(tLista *pl, const void *dato, unsigned cantbyte, int pos
     }
 
     return 0; //no encontro la posicion
-
-
-    return 0; //no encontró la posicion
 
 }

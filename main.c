@@ -2,7 +2,7 @@
 
 int main()
 {
-     grafica();
+    grafica();
     menu();
     return 0;
 }

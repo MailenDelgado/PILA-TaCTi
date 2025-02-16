@@ -3,7 +3,7 @@
 
 void menu(void){
     char op;
-    printf("Eliga una opcion: \n[A]Jugar\n[B]Ver ranking equipo\n[C]Salir\n");
+    printf("\nElija una opcion: \n[A]Jugar\n[B]Ver ranking equipo\n[C]Salir\n");
     scanf("%s", &op);
     if(op == 'A' || op == 'a')
     {
@@ -58,6 +58,7 @@ int iniciarJuego(){
 
     // Inicializa la semilla para los numeros aleatorios
     srand(time(NULL));
+
     sortearJugadores(&list_jugadores,cantidadJugadores,orden);
 
     crearLista(&list_partidas);
@@ -672,6 +673,7 @@ void grafica(void){
     printf("\n\t\t\t - MAMANI LUCAS ");
     printf("\n\t\t\t - RAMIREZ KEVIN ");
     printf("\n\t\t\t - TESTA TOMAS ");
+
 
 }
 

@@ -7,20 +7,30 @@ void menu(void){
     scanf("%s", &op);
     if(op == 'A' || op == 'a')
     {
-        printf("Jugar\n");
+
         iniciarJuego();
+        system("cls");
+        grafica();
         menu();
     }
     else if((op == 'B') || (op == 'b'))
     {
+
         printf("Ver ranking equipo\n");
         recuperar_de_api();
+
+        system("pause");
+        system("cls");
+        grafica();
+        menu();
     }
     else if((op == 'C') || (op == 'c'))
         printf("Salir");
     else
     {
         printf("Opcion incorrecta\n");
+        system("cls");///lo malo de esta linea es que nunca va mostrar "Opcion incorrecta", en caso contrario comentarla
+        grafica();
         menu();
     }
 }
@@ -117,19 +127,30 @@ int ingresoJugadores(tLista *list_jugadores, int *cantidad){
     {
         system("cls");
         printf("\t\t\t----------------\n");
-        printf("Ingrese los nombres de los jugadores o para terminar ingrese 0: \n");
+        printf("INGRESE EL NOMBRE DEL JUGADOR(0 PARA FINALIZAR EL INGRESO DE JUGADORES): \n");
 
         scanf("%19s", jugador.nombre);
         jugador.puntos = 0; //inicializo todos los puntajes en 0
         r=listaLlena(list_jugadores, sizeof(tJugador));
 
         if (!r && strcmp(jugador.nombre,"0")){ ///Si la lista no est� llena y el nombre del jugador no es 0
-            ponerEnLista(list_jugadores, &jugador, sizeof(tJugador));
-            (*cantidad)++;
+            if((strcmp(jugador.nombre,"A") > 0 && strcmp(jugador.nombre,"Z") < 0) ||
+              (strcmp(jugador.nombre,"a") > 0 && strcmp(jugador.nombre,"z") < 0))///si por error un nombre de un solo caracter que no sea una letra(como por ejemplo numeros y simbolos)
+              {
+                ponerEnLista(list_jugadores, &jugador, sizeof(tJugador));
+                (*cantidad)++;
+              }else
+              {
+                //system("cls");/// se puede comentar para limpie la pantalla
+                printf("Ingreso por error un numero o simbolo. ingrese de vuelta un nombre\n");
+                system("pause");
+
+              }
         }else if(r){
             printf("Error al ingresar nombre, LISTA LLENA ");
             return 0;
         }
+
     }while(strcmp(jugador.nombre, "0"));
 
     if(!*cantidad){
@@ -152,7 +173,7 @@ int sortearJugadores(tLista *list_jugadores, int cantidad, int *orden) {
         printf(" Jugador %d: %s\n", i + 1, jugador->nombre);
         }
         else{
-            printf("Jugador %d: (No encontrado)",i+1);
+            printf("Jugador %d: (No encontrado)",i+1); /// esta linea nunca se uso o nunca se va convocar por pantalla
         }
     }
     system("pause");
@@ -632,6 +653,7 @@ int finalizaJuego(char tablero[3][3], char *jugador, int *opc, int band){
     int juegoTerminado = 0;
     imprimirTablero(tablero);
     jugarTurno(tablero, *jugador, *opc);
+    //system("cls");
     if (verificarGanador(tablero)){
         imprimirTablero(tablero);
         printf("Jugador %c ha ganado\n", *jugador);
@@ -673,6 +695,7 @@ void grafica(void){
     printf("\n\t\t\t - MAMANI LUCAS ");
     printf("\n\t\t\t - RAMIREZ KEVIN ");
     printf("\n\t\t\t - TESTA TOMAS ");
+    printf("\n");
 
 
 }

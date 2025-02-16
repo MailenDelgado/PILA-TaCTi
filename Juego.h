@@ -1,9 +1,10 @@
 #ifndef JUEGO_H_INCLUDED
 #define JUEGO_H_INCLUDED
 
+#include <time.h>
 #include "Lista.h"
 #include "config/config.h"
-#include <time.h>
+#define NOMBRE_ARCH_CONFIG "config/config.txt"
 #define TAMNOMBRE 20
 #define TAM 3
 

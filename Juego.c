@@ -39,7 +39,8 @@ int iniciarJuego(){
             list_partidas;
     tConfig config;
     tJugador *jugador;//es un puntero porque en realidad es el jugador encontrado en la lista
-    cargarConfig("D:\\Documentos\\GitHub\\PILA-TaCTi\\config\\config.txt", &config);
+
+    cargarConfig(NOMBRE_ARCH_CONFIG, &config);
 
     cantPartidas = config.cantPartidas;
     resultado = ingresoJugadores(&list_jugadores,&cantidadJugadores) ;
@@ -99,10 +100,6 @@ int iniciarJuego(){
 
     free(orden);
 
-    printf("\n\n\tRESULTADOS");
-    printf("\n\t----------");
-    mostrarLista(&list_jugadores, verJugador);
-    system("pause");
     generarInforme(&list_partidas, &list_jugadores);
 
     vaciarLista(&list_jugadores);
@@ -575,11 +572,8 @@ int generarInforme(tLista *list_partidas, tLista *list_jugadores){
 
 void generarRanking(tLista *pl, FILE *pf){
     ordenarLista(pl, comparoPorPuntaje);
-    printf("\tRanking\n");
-    printf("\tNombre \tPuntos\n");
     fprintf(pf, "\tRanking\n");
     fprintf(pf,"\tNombre \tPuntos\n");
-    recorroLista(pl, NULL, 0, imprimoRanking);
     recorroLista(pl, pf, 0, imprimoRankingEnArchivo);
 }
 

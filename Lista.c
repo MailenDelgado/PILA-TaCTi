@@ -76,11 +76,11 @@ int sacarDeLista(tLista* pl, void* dato, unsigned cantbyte){
 }*/
 
 void recorroLista(tLista *pl, void *pd, unsigned tam, int (*accion)(const void *, const void *)){
-//    int i = 0;
+
     while(*pl)
     {
         accion((*pl)->info, pd);
-//        i += tam;
+
         pl = &(*pl)->sig;
     }
 }
@@ -114,6 +114,10 @@ void *buscarporPos(const tLista *pl, int pos){
             i++;
         }
 
+         if (*pl == NULL) {
+        return NULL;
+        }
+
         return (*pl)->info;
 
 }
@@ -129,5 +133,10 @@ int actualizaEnPosLista(tLista *pl, const void *dato, unsigned cantbyte, int pos
     actualizardato((*pl)->info, dato);
     return BIEN;
     }
+
     return 0; //no encontro la posicion
+
+
+    return 0; //no encontró la posicion
+
 }

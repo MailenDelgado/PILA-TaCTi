@@ -55,7 +55,7 @@ int iniciarJuego(){
 
     porden = orden;
 
-    // Inicializa la semilla para los n�meros aleatorios
+    // Inicializa la semilla para los numeros aleatorios
     srand(time(NULL));
     sortearJugadores(&list_jugadores,cantidadJugadores,orden);
 
@@ -99,10 +99,6 @@ int iniciarJuego(){
 
     free(orden);
 
-    printf("\n\n\tRESULTADOS");
-    printf("\n\t----------");
-    mostrarLista(&list_jugadores, verJugador);
-    system("pause");
     generarInforme(&list_partidas, &list_jugadores);
 
     vaciarLista(&list_jugadores);
@@ -150,7 +146,12 @@ int sortearJugadores(tLista *list_jugadores, int cantidad, int *orden) {
     printf("\n\t\t\t------------------------------\n");
     for (i = 0; i < cantidad; i++) {
         jugador = (tJugador *)buscarporPos(list_jugadores,orden[i]);
+        if(jugador){
         printf(" Jugador %d: %s\n", i + 1, jugador->nombre);
+        }
+        else{
+            printf("Jugador %d: (No encontrado)",i+1);
+        }
     }
     system("pause");
     return 1;
@@ -570,11 +571,8 @@ int generarInforme(tLista *list_partidas, tLista *list_jugadores){
 
 void generarRanking(tLista *pl, FILE *pf){
     ordenarLista(pl, comparoPorPuntaje);
-    printf("\tRanking\n");
-    printf("\tNombre \tPuntos\n");
     fprintf(pf, "\tRanking\n");
     fprintf(pf,"\tNombre \tPuntos\n");
-    recorroLista(pl, NULL, 0, imprimoRanking);
     recorroLista(pl, pf, 0, imprimoRankingEnArchivo);
 }
 
@@ -653,3 +651,26 @@ int finalizaJuego(char tablero[3][3], char *jugador, int *opc, int band){
     }
     return juegoTerminado;
 }
+
+
+void grafica(void){
+
+    printf("\n\t***************************************************************************");
+    printf("\n\t///////////////////////////////////////////////////////////////////////////");
+    printf("\n\t**                                                                       **");
+    printf("\n\t**   _________       __             _______         _________    ___     **");
+    printf("\n\t**  |___   ___||    /  \\           /   ____||      |___   ___|| |   ||   **");
+    printf("\n\t**      |  ||      / /\\ \\     __   |  ||       __      |  ||    |   ||   **");
+    printf("\n\t**      |  ||     /  __  \\   |__|| |  ||___   |__||    |  ||    |   ||   **");
+    printf("\n\t**      |__||    /__/  \\ _\\        |_______||          |__||    |___||   **");
+    printf("\n\t**                                                                       **");
+    printf("\n\t///////////////////////////////////////////////////////////////////////////");
+    printf("\n\t***************************************************************************\n\n\n");
+    printf("\t\tUn desarrollo de \"PILA\" ");
+    printf("\n\t\t\t - DELGADO MAILEN ");
+    printf("\n\t\t\t - MAMANI LUCAS ");
+    printf("\n\t\t\t - RAMIREZ KEVIN ");
+    printf("\n\t\t\t - TESTA TOMAS ");
+
+}
+

@@ -40,7 +40,7 @@ int iniciarJuego(){
             list_partidas;
     tConfig config;
     tJugador *jugador;//es un puntero porque en realidad es el jugador encontrado en la lista
-    cargarConfig("D:\\Documentos\\GitHub\\PILA-TaCTi\\config\\config.txt", &config);
+    cargarConfig(NOMBRE_ARCH_CONFIG, &config);
     cantPartidas = config.cantPartidas;
     resultado = ingresoJugadores(&list_jugadores,&cantidadJugadores) ;
 

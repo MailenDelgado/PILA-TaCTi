@@ -5,8 +5,8 @@ Este proyecto implementa un minijuego de Tateti (Ta-C-Ti) desarrollado en C, dis
 ## Instrucciones del juego
 Al iniciar, se presenta un menú interactivo. Las opciones disponibles son:
 
-- **[A] Jugar:**  Se le pedirá que cargue los nombres de las personas que van a jugar. Puede ingresar la cantidad de nombres que desee. Una vez que termine de ingresarlos, aparecerá por pantalla el orden en el que jugarán los jugadores, y se le preguntará al primer jugador si está listo. En caso de que sí, inicia el juego.
-- **[B] Ver ranking equipo:**  
+- **[A] Jugar:** Se le pedirá que cargue los nombres de las personas que van a jugar. Puede ingresar la cantidad de nombres que desee. Una vez que termine de ingresarlos, aparecerá por pantalla el orden en el que jugarán los jugadores, y se le preguntará al primer jugador si está listo. En caso de que sí, inicia el juego.
+- **[B] Ver ranking equipo:** Se mostrara por pantalla todos los puntos que cada jugador fue acumulando a lo largo de todos los juegos. 
 - **[C] Salir:** Termina el juego.
 
 ## Reglas del juego

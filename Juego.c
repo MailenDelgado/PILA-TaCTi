@@ -15,6 +15,7 @@ void menu(void){
     {
         printf("Ver ranking equipo\n");
         recuperar_de_api();
+        menu();
     }
     else if((op == 'C') || (op == 'c'))
         printf("Salir");

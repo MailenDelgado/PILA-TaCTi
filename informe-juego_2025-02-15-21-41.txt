@@ -1,0 +1,26 @@
+JUGADOR: tomas              
+Partida: 1
+Ganador: MAQUINA   
+Puntaje: -1
+TABLERO:
+ O | X | X 
+---+---+---
+   | O | X 
+---+---+---
+ O |   | X 
+-----------------------------------
+JUGADOR: fede               
+Partida: 1
+Ganador: MAQUINA   
+Puntaje: -1
+TABLERO:
+ O |   | X 
+---+---+---
+ O | O |   
+---+---+---
+ X | X | X 
+-----------------------------------
+	Ranking
+	Nombre 	Puntos
+	fede	-1  
+	tomas	-1  

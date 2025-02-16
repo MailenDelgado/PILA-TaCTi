@@ -67,13 +67,13 @@ int sacarDeLista(tLista* pl, void* dato, unsigned cantbyte){
     return BIEN;
 }
 
-void mostrarLista(const tLista *pl, void(*show)(const void *dato)){
+/*void mostrarLista(const tLista *pl, void(*show)(const void *dato)){
     while (*pl)
     {
         show((*pl)->info);
         pl = &(*pl)->sig;
     }
-}
+}*/
 
 void recorroLista(tLista *pl, void *pd, unsigned tam, int (*accion)(const void *, const void *)){
 //    int i = 0;

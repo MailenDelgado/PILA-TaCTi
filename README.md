@@ -10,7 +10,7 @@ Al iniciar, se presenta un menú interactivo. Las opciones disponibles son:
 - **[C] Salir:** Termina el juego.
 
 ## Reglas del juego
-- **Turnos alternados:** Al usuario y a la máquina se le asignaran un simbolo aleatoriamente ("X" o "O") y juegaran por turnos en un tablero de 3x3, en el que simpre iniciara al que le haya tocado el simbolo "X".
+- **Turnos alternados:** Al usuario y a la máquina se le asignaran un simbolo aleatoriamente ("X" o "O") y jugaran por turnos en un tablero de 3x3, en el que simpre iniciara al que le haya tocado el simbolo "X".
 - **Condiciones de victoria:**
     - Un jugador gana si coloca tres de sus símbolos en una línea horizontal, vertical o diagonal.
     - Si el tablero se llena sin que haya un ganador, la partida se considera un empate.

@@ -13,7 +13,7 @@ void menu(void){
     else if((op == 'B') || (op == 'b'))
     {
         printf("Ver ranking equipo\n");
-        menu();
+        recuperar_de_api();
     }
     else if((op == 'C') || (op == 'c'))
         printf("Salir");
@@ -509,8 +509,15 @@ void guardarPartida(tLista *list_partidas, char tablero[TAM][TAM],int numPartida
     }
 }
 
+
+int generoAPI(const void *a, const void *b){
+    tJugador *jugador = (tJugador*)a;
+    char array = *(char *)b;
+    strcpy(array, jugador->nombre);
+}
+
 int generarInforme(tLista *list_partidas, tLista *list_jugadores){
-    char nombrearch[40];
+    char nombrearch[40], codigoGrupo = "PILAR", array[] = {};
     int i,
         j,
         result;
@@ -549,9 +556,13 @@ int generarInforme(tLista *list_partidas, tLista *list_jugadores){
         result=sacarDeLista(list_partidas,&partida,sizeof(partida));
      }
      generarRanking(list_jugadores, pl);
+     recorroLista(&list_jugadores, &array, 0, generoAPI);
      fclose(pl);
      return 0;
 }
+
+
+
 
 void generarRanking(tLista *pl, FILE *pf){
     ordenarLista(pl, comparoPorPuntaje);
@@ -613,8 +624,7 @@ void verJugador (const void *dato){
     printf("%s        %d\n", jugador->nombre, jugador->puntos);
 }
 
-int finalizaJuego(char tablero[3][3], char *jugador, int *opc, int band)
-{
+int finalizaJuego(char tablero[3][3], char *jugador, int *opc, int band){
     int juegoTerminado = 0;
     imprimirTablero(tablero);
     jugarTurno(tablero, *jugador, *opc);
@@ -639,3 +649,10 @@ int finalizaJuego(char tablero[3][3], char *jugador, int *opc, int band)
     }
     return juegoTerminado;
 }
+/*
+  verRanking(){
+    recuperar_de_api();
+}
+
+    enviar_a_api(codgrupo, nom, puntos);
+*/

@@ -15,7 +15,6 @@ void menu(void){
     {
         printf("Ver ranking equipo\n");
         recuperar_de_api();
-        menu();
     }
     else if((op == 'C') || (op == 'c'))
         printf("Salir");
@@ -41,6 +40,7 @@ int iniciarJuego(){
     tConfig config;
     tJugador *jugador;//es un puntero porque en realidad es el jugador encontrado en la lista
     cargarConfig("D:\\Documentos\\GitHub\\PILA-TaCTi\\config\\config.txt", &config);
+
     cantPartidas = config.cantPartidas;
     resultado = ingresoJugadores(&list_jugadores,&cantidadJugadores) ;
 

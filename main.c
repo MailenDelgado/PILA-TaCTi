@@ -4,6 +4,7 @@
 
 int main()
 {
+     grafica();
     menu();
     return 0;
 }

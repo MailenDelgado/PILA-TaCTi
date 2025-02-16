@@ -1,0 +1,25 @@
+JUGADOR: lucas              
+Partida: 1
+Ganador: EMPATE    
+Puntaje: 2
+TABLERO:
+ O | X | O 
+---+---+---
+ O | X | X 
+---+---+---
+ X | O | X 
+-----------------------------------
+JUGADOR: lucas              
+Partida: 2
+Ganador: EMPATE    
+Puntaje: 2
+TABLERO:
+ O | X | X 
+---+---+---
+ X | O | O 
+---+---+---
+ O | X | X 
+-----------------------------------
+	Ranking
+	Nombre 	Puntos
+	lucas	4   

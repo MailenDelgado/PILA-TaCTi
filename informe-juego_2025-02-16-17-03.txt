@@ -1,0 +1,38 @@
+JUGADOR: pol                
+Partida: 1
+Ganador: MAQUINA   
+Puntaje: -1
+TABLERO:
+   | O | X 
+---+---+---
+   | O | X 
+---+---+---
+   |   | X 
+-----------------------------------
+JUGADOR: mai                
+Partida: 1
+Ganador: mai       
+Puntaje: 3
+TABLERO:
+ O | X | X 
+---+---+---
+   | X | O 
+---+---+---
+ X | O |   
+-----------------------------------
+JUGADOR: lean               
+Partida: 1
+Ganador: EMPATE    
+Puntaje: 2
+TABLERO:
+ O | X | X 
+---+---+---
+ X | X | O 
+---+---+---
+ O | O | X 
+-----------------------------------
+	Ranking
+	Nombre 	Puntos
+	mai	3   
+	lean	2   
+	pol	-1  

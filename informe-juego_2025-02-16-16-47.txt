@@ -1,0 +1,26 @@
+JUGADOR: felipe             
+Partida: 1
+Ganador: EMPATE    
+Puntaje: 2
+TABLERO:
+ X | O | X 
+---+---+---
+ X | O | X 
+---+---+---
+ O | X | O 
+-----------------------------------
+JUGADOR: maria              
+Partida: 1
+Ganador: EMPATE    
+Puntaje: 2
+TABLERO:
+ O | X | X 
+---+---+---
+ X | O | O 
+---+---+---
+ O | X | X 
+-----------------------------------
+	Ranking
+	Nombre 	Puntos
+	maria	2   
+	felipe	2   

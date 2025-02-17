@@ -22,6 +22,8 @@ typedef struct{
     char ganador[TAMNOMBRE];
 }tPartida;
 
+void grafica(void);
+
 void menu(void);
 
 int iniciarJuego(void);
@@ -72,13 +74,14 @@ int imprimoRanking(const void *d1, const void *d2);
 
 int imprimoRankingEnArchivo(const void *d1, const void *d2);
 
-void lecturaDeConfiguracion(void);
-
-void verRanking(void);
+void lecturaDeConfiguracion(void); //�donde se usa esta funcion?
+// void verRanking(void) ->esta se usa?
+//falta el prototipo de la funcion generoAPI
 
 int finalizaJuego(char tablero[3][3], char *jugador, int *opc, int band);
 
 void grafica(void);
 
 void limpiarBuffer(void);
+
 #endif // JUEGO_H_INCLUDED

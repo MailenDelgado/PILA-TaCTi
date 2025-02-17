@@ -1,0 +1,38 @@
+JUGADOR: maria              
+Partida: 1
+Ganador: MAQUINA   
+Puntaje: -1
+TABLERO:
+ X | X | O 
+---+---+---
+   | X | X 
+---+---+---
+ O | O | O 
+-----------------------------------
+JUGADOR: mailen             
+Partida: 1
+Ganador: MAQUINA   
+Puntaje: -1
+TABLERO:
+ O | O | X 
+---+---+---
+ X | X | O 
+---+---+---
+ X |   |   
+-----------------------------------
+JUGADOR: felipe             
+Partida: 1
+Ganador: EMPATE    
+Puntaje: 2
+TABLERO:
+ O | X | X 
+---+---+---
+ X | O | O 
+---+---+---
+ X | O | X 
+-----------------------------------
+	Ranking
+	Nombre 	Puntos
+	felipe	2   
+	mailen	-1  
+	maria	-1  

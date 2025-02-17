@@ -1,7 +1,12 @@
 #include "Juego.h"
 #include "API.h"
+//puntajes
+#define GANAR 3
+#define PERDER -1
+#define EMPATE 2
 
-void menu(void){
+void menu(void)
+{
     char op;
     printf("\n\tElija una opcion: \n\t[A]Jugar\n\t[B]Ver ranking equipo\n\t[C]Salir\n");
     scanf("%s", &op);
@@ -29,14 +34,16 @@ void menu(void){
         printf("Salir");
     else
     {
-        printf("Opcion incorrecta\n");
-//        system("cls"); ///lo malo de esta linea es que nunca va mostrar "Opcion incorrecta", en caso contrario comentarla
+        printf("\nOpcion incorrecta\n");
+        system("pause");
+        system("cls");
         grafica(0);
         menu();
     }
 }
 
-int iniciarJuego(){
+int iniciarJuego()
+{
     int cantidadJugadores=0,
         cantPartidas,
         i = 0,
@@ -49,7 +56,7 @@ int iniciarJuego(){
     tLista  list_jugadores,
             list_partidas;
     tConfig config;
-    tJugador *jugador;//es un puntero porque en realidad es el jugador encontrado en la lista
+    tJugador *jugador;//es un puntero al jugador encontrado en la lista
 
     cargarConfig(NOMBRE_ARCH_CONFIG, &config);
 
@@ -59,9 +66,12 @@ int iniciarJuego(){
 
     if(!resultado) //si no se ingresaron jugadores vuelve al menu
         return 0;
+
+    //pedir memoria para el vector de ordenamiento
     orden= malloc(cantidadJugadores * sizeof(int));
 
-    if (orden == NULL){
+    if (orden == NULL)
+    {
         printf("Error al asignar memoria para vector de Orden\n");
         return 0;
     }
@@ -77,32 +87,38 @@ int iniciarJuego(){
     system("cls");
 
     //Partidas
-    do{
-        jugador = buscarporPos(&list_jugadores,*porden); //obtener jugador
+    do
+    {
+        jugador = buscarporPos(&list_jugadores,*porden); //obtener jugador segun su posicion en la lista
 
-        for(i=0;i<cantPartidas;i++){
+        for(i=0; i<cantPartidas; i++)
+        {
             system("cls");
             printf("\n\t=====================================================");
             printf("\n\tES EL TURNO DE: %s. Partida %d de %d\n", jugador->nombre,i+1,cantPartidas);
 
             resultado = jugar(tablero);
 
-            if(!resultado){
+            if(!resultado)
+            {
                 free(orden);
                 vaciarLista(&list_jugadores);
                 return 0;
             }
 
 
-            if(resultado == 3){
+            if(resultado == GANAR)
+            {
                 strcpy(ganador,jugador->nombre);
                 grafica(1);
             }
-            else if(resultado == -1){
+            else if(resultado == PERDER)
+            {
                 strcpy(ganador,"MAQUINA");
                 grafica(2);
             }
-            else{
+            else
+            {
                 strcpy(ganador,"EMPATE");
                 grafica(3);
             }
@@ -118,7 +134,8 @@ int iniciarJuego(){
 
         porden++;
         njugador++;
-    }while( njugador < cantidadJugadores );
+    }
+    while( njugador < cantidadJugadores );
 
     free(orden);
 
@@ -129,7 +146,8 @@ int iniciarJuego(){
     return 1;
 }
 
-int ingresoJugadores(tLista *list_jugadores, int *cantidad){
+int ingresoJugadores(tLista *list_jugadores, int *cantidad)
+{
     int r,i=1;
     tJugador jugador;
     crearLista(list_jugadores);
@@ -149,35 +167,41 @@ int ingresoJugadores(tLista *list_jugadores, int *cantidad){
         jugador.puntos = 0; //inicializo todos los puntajes en 0
         r=listaLlena(list_jugadores, sizeof(tJugador));
 
-        if (!r && strcmp(jugador.nombre,"0")){ ///Si la lista no est� llena y el nombre del jugador no es 0
+        if (!r && strcmp(jugador.nombre,"0"))  ///Si la lista no est� llena y el nombre del jugador no es 0
+        {
             if((strcmp(jugador.nombre,"A") > 0 && strcmp(jugador.nombre,"Z") < 0) ||
-              (strcmp(jugador.nombre,"a") > 0 && strcmp(jugador.nombre,"z") < 0))///si por error un nombre de un solo caracter que no sea una letra(como por ejemplo numeros y simbolos)
-              {
+                    (strcmp(jugador.nombre,"a") > 0 && strcmp(jugador.nombre,"z") < 0))///si por error un nombre de un solo caracter que no sea una letra(como por ejemplo numeros y simbolos)
+            {
                 ponerEnLista(list_jugadores, &jugador, sizeof(tJugador));
                 (*cantidad)++;
                 i++;
-              }else
-              {
-                //system("cls");/// se puede comentar para limpie la pantalla
+            }
+            else
+            {
                 printf("Ingreso por error un numero o simbolo. ingrese de vuelta un nombre\n");
                 system("pause");
 
-              }
-        }else if(r){
+            }
+        }
+        else if(r)
+        {
             printf("Error al ingresar nombre, LISTA LLENA ");
             return 0;
         }
 
-    }while(strcmp(jugador.nombre, "0"));
+    }
+    while(strcmp(jugador.nombre, "0"));
 
-    if(!*cantidad){
+    if(!*cantidad)
+    {
         return 0;
     }
     return 1;
 }
 
 // Sorteo de jugadores
-int sortearJugadores(tLista *list_jugadores, int cantidad, int *orden) {
+int sortearJugadores(tLista *list_jugadores, int cantidad, int *orden)
+{
     int i;
     tJugador *jugador;
     sorteo(orden, cantidad);
@@ -186,12 +210,15 @@ int sortearJugadores(tLista *list_jugadores, int cantidad, int *orden) {
     printf("\n\t\t|\tOrden aleatorio de jugadores:     |");
     printf("\n\t\t|\t----------------------------      |");
     printf("\n\t\t =========================================\n\n");
-    for (i = 0; i < cantidad; i++) {
+    for (i = 0; i < cantidad; i++)
+    {
         jugador = (tJugador *)buscarporPos(list_jugadores,orden[i]);
-        if(jugador){
-        printf(" Jugador %d: %s\n", i + 1, jugador->nombre);
+        if(jugador)
+        {
+            printf(" Jugador %d: %s\n", i + 1, jugador->nombre);
         }
-        else{
+        else
+        {
             printf("Jugador %d: (No encontrado)",i+1); /// esta linea nunca se uso o nunca se va convocar por pantalla
         }
     }
@@ -199,15 +226,18 @@ int sortearJugadores(tLista *list_jugadores, int cantidad, int *orden) {
     return 1;
 }
 
-void sorteo(int *indices, int n) { ///fisher yates: algoritmo de desordenamiento aleatorio
+void sorteo(int *indices, int n)   ///fisher yates: algoritmo de desordenamiento aleatorio
+{
     int i,
         j,
         temp;
     ///cargo el vector con el numero de su indice
-    for (i = 0; i < n; i++) {
+    for (i = 0; i < n; i++)
+    {
         indices[i] = i;
     }
-    for (i = n - 1; i > 0; i--) { // empieza desde el ultimo
+    for (i = n - 1; i > 0; i--)   // empieza desde el ultimo
+    {
         j = rand() % (i + 1); //elije un indice aleatorio entre 0 e i
         temp = indices[i];
         indices[i] = indices[j];
@@ -215,7 +245,8 @@ void sorteo(int *indices, int n) { ///fisher yates: algoritmo de desordenamiento
     }
 }
 
-int jugar(char tablero[TAM][TAM]){
+int jugar(char tablero[TAM][TAM])
+{
     int juegoTerminado = 0,
         opc = 0;  //indica si juega el humano "0" o la maquina "1" a lo largo de los turnos.
 
@@ -225,10 +256,12 @@ int jugar(char tablero[TAM][TAM]){
     {
         printf("\n\n\tListo para jugar? ([1] SI, [0] no): ");
         scanf("%d", &opc);
-        if(opc==0){
+        if(opc==0)
+        {
             printf("\n\tVolver al menu? ([1] SI, [0] no):");
             scanf("%d", &opc);
-            if(opc==1){
+            if(opc==1)
+            {
                 return 0;
             }
         }
@@ -236,11 +269,14 @@ int jugar(char tablero[TAM][TAM]){
 
     inicializarTablero(tablero);
 
-    if (jugador == 'X') {
-        opc = 0;  // El jugador humano juega si es su turno
+    if (jugador == 'X')       //Si en el sorteo salio X comienza el jugando el humano opc=0
+    {
+        opc = 0;
         printf("\n\t Sos la X. Empezas vos\n");
-    }else{ //si salio sorteado el O
-        opc = 1; // El bot juega si es su turno
+    }
+    else                      //si salio sorteado el O comienza jugando la maquina opc=1
+    {
+        opc = 1;
         jugador ='X'; //Debo cambiar a X para que el bot comience jugando con el simbolo correcto.
         printf("\n\t Sos el O. Empieza la IA.\n");
     }
@@ -249,35 +285,45 @@ int jugar(char tablero[TAM][TAM]){
     system("pause");
     system("cls");
 
-    while (!juegoTerminado){
+    while (!juegoTerminado)
+    {
         juegoTerminado = finalizaJuego(tablero, &jugador, &opc);
     }
+
     return juegoTerminado;
+
 }
 
-char sortearSimbolo(void) {
+char sortearSimbolo(void)
+{
     int orden[2];
     sorteo(orden, 2);                    //EL PRIMER ELEMENTO ES EL SIMBOLO CON EL QUE EMPEZAR� EL USUARIO
     return (orden[0] == 0) ? 'O' : 'X'; //Si no hubo intercambio de indices entonces el usuario empieza con O, sino con X.
 }
 
-void inicializarTablero(char tablero[3][3]) {
-    for (int i = 0; i < 3; i++) {
-        for (int j = 0; j < 3; j++) {
+void inicializarTablero(char tablero[3][3])
+{
+    for (int i = 0; i < 3; i++)
+    {
+        for (int j = 0; j < 3; j++)
+        {
             tablero[i][j] = ' ';  // El tablero comienza vac�o
         }
     }
 }
 
-void imprimirTablero(char tablero[3][3]) {
+void imprimirTablero(char tablero[3][3])
+{
     printf("\n");
     printf("\tCol Col Col\n");
     printf("\t 1   2   3\n");
 
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < 3; i++)
+    {
         printf("Fila %d",i+1);
         printf("\t");
-        for (int j = 0; j < 3; j++) {
+        for (int j = 0; j < 3; j++)
+        {
             printf(" %c ", tablero[i][j]);
             if (j < 2) printf("|");
         }
@@ -287,44 +333,58 @@ void imprimirTablero(char tablero[3][3]) {
     printf("\n");
 }
 
-void jugarTurno(char tablero[TAM][TAM],char jugador,int opc) {
+void jugarTurno(char tablero[TAM][TAM],char jugador,int opc)
+{
     int columna,
         fila,
         r;
-    if(opc == 1)
+    if(opc == 1) //juega bot segun estrategias
     {
-        if(intentarGanar(&fila, &columna, tablero, &jugador)== 1){
+        if(intentarGanar(&fila, &columna, tablero, &jugador)== 1)
+        {
             printf("El bot ha jugado en la casilla (%d, %d)\n", fila, columna);
         }
-        else if(bloquearVictoria(&fila, &columna, tablero, &jugador)== 1){
+        else if(bloquearVictoria(&fila, &columna, tablero, &jugador)== 1)
+        {
             printf("El bot ha jugado en la casilla (%d, %d)\n", fila, columna);
         }
-        else{
+        else
+        {
             // Bot: elegir un movimiento aleatorio
             int movimientoValido = 0;
-            while (!movimientoValido) {
+            while (!movimientoValido)
+            {
                 fila = rand() % 3 + 1;
                 columna = rand() % 3 + 1;
-                if (tablero[fila-1][columna-1] == ' ') {
+                if (tablero[fila-1][columna-1] == ' ')
+                {
                     movimientoValido = 1;
                 }
             }
             printf("El bot ha jugado en la casilla (%d, %d)\n", fila, columna);
         }
-    } else {
-        // Jugador: ingresar fila y columna
-        do{
+    }
+    else
+    {
+        // Jugador humano: ingresar fila y columna
+        do
+        {
             printf("Jugador %c, ingresa fila (1-3) y columna (1-3): ", jugador);
             scanf("%d %d", &fila, &columna);
             r = verificafilacol(fila,columna);
-            if(!r){
+            if(!r)
+            {
                 printf("Ingrese un numero de fila y columna validos, separados por un espacio.\n");
             }
-        }while(!r);
+        }
+        while(!r);
         // Verificar si la casilla est� vac�a
-        if (tablero[fila-1][columna-1] == ' ') {
+        if (tablero[fila-1][columna-1] == ' ')
+        {
             tablero[fila-1][columna-1] = jugador;
-        } else {
+        }
+        else
+        {
             printf("Casilla ocupada. Intenta nuevamente.\n");
             jugarTurno(tablero, jugador, 0);  // Reintentar si la casilla ya est� ocupada
             return;
@@ -334,18 +394,25 @@ void jugarTurno(char tablero[TAM][TAM],char jugador,int opc) {
 }
 
 //Funciones de estrategia bot
-int intentarGanar(int *f, int *c, char tablero[3][3], char *jugador){
+int intentarGanar(int *f, int *c, char tablero[3][3], char *jugador)
+{
     // Verificar filas
-    for (int i = 0; i < 3; i++) {
-        if (tablero[i][0] == tablero[i][1] && tablero[i][0] != ' ' && tablero[i][0] == *jugador && tablero[i][2] == ' ') {
+    for (int i = 0; i < 3; i++)
+    {
+        if (tablero[i][0] == tablero[i][1] && tablero[i][0] != ' ' && tablero[i][0] == *jugador && tablero[i][2] == ' ')
+        {
             *f = i+1;
             *c = 3;
             return 1;
-        }else if(tablero[i][1] == tablero[i][2] && tablero[i][1] != ' ' && tablero[i][1] == *jugador && tablero[i][0] == ' '){
+        }
+        else if(tablero[i][1] == tablero[i][2] && tablero[i][1] != ' ' && tablero[i][1] == *jugador && tablero[i][0] == ' ')
+        {
             *f = i+1;
             *c = 1;
             return 1;
-        }else if(tablero[i][0] == tablero[i][2] && tablero[i][0] != ' ' && tablero[i][0] == *jugador && tablero[i][1] == ' '){
+        }
+        else if(tablero[i][0] == tablero[i][2] && tablero[i][0] != ' ' && tablero[i][0] == *jugador && tablero[i][1] == ' ')
+        {
             *f = i+1;
             *c = 2;
             return 1;
@@ -353,16 +420,22 @@ int intentarGanar(int *f, int *c, char tablero[3][3], char *jugador){
     }
 
     // Verificar columnas
-    for (int i = 0; i < 3; i++) {
-        if (tablero[0][i] == tablero[1][i] && tablero[0][i] != ' ' && tablero[0][i] == *jugador && tablero[2][i] == ' ') {
+    for (int i = 0; i < 3; i++)
+    {
+        if (tablero[0][i] == tablero[1][i] && tablero[0][i] != ' ' && tablero[0][i] == *jugador && tablero[2][i] == ' ')
+        {
             *f = 3;
             *c = i+1;
             return 1;
-        }else if(tablero[1][i] == tablero[2][i] && tablero[1][i] != ' ' && tablero[1][i] == *jugador && tablero[0][i] == ' '){
+        }
+        else if(tablero[1][i] == tablero[2][i] && tablero[1][i] != ' ' && tablero[1][i] == *jugador && tablero[0][i] == ' ')
+        {
             *f = 1;
             *c = i+1;
             return 1;
-        }else if(tablero[0][i] == tablero[2][i] && tablero[0][i] != ' ' && tablero[0][i] == *jugador && tablero[1][i] == ' '){
+        }
+        else if(tablero[0][i] == tablero[2][i] && tablero[0][i] != ' ' && tablero[0][i] == *jugador && tablero[1][i] == ' ')
+        {
             *f = 2;
             *c = i+1;
             return 1;
@@ -370,29 +443,34 @@ int intentarGanar(int *f, int *c, char tablero[3][3], char *jugador){
     }
 
     // Verificar diagonales
-    if (tablero[0][0] == tablero[1][1] && tablero[0][0] != ' ' && tablero[0][0] == *jugador && tablero[2][2] == ' ') {
+    if (tablero[0][0] == tablero[1][1] && tablero[0][0] != ' ' && tablero[0][0] == *jugador && tablero[2][2] == ' ')
+    {
         *f = 3;
         *c = 3;
         return 1;
     }
-    if(tablero[1][1] == tablero[2][2] && tablero[1][1] != ' ' && tablero[1][1] == *jugador && tablero[0][0] == ' '){
+    if(tablero[1][1] == tablero[2][2] && tablero[1][1] != ' ' && tablero[1][1] == *jugador && tablero[0][0] == ' ')
+    {
         *f = 1;
         *c = 1;
         return 1;
     }
-    if(tablero[0][0] == tablero[2][2] && tablero[0][0] != ' ' && tablero[0][0] == *jugador && tablero[1][1] == ' '){
+    if(tablero[0][0] == tablero[2][2] && tablero[0][0] != ' ' && tablero[0][0] == *jugador && tablero[1][1] == ' ')
+    {
         *f = 2;
         *c = 2;
         return 1;
     }
 
-    if (tablero[0][2] == tablero[1][1] && tablero[0][2] != ' ' && tablero[0][2] == *jugador && tablero[2][0] == ' '){
+    if (tablero[0][2] == tablero[1][1] && tablero[0][2] != ' ' && tablero[0][2] == *jugador && tablero[2][0] == ' ')
+    {
         *f = 3;
         *c = 1;
         return 1;
     }
 
-    if(tablero[1][1] == tablero[2][0] && tablero[1][1] != ' ' && tablero[1][1] == *jugador && tablero[0][2] == ' '){
+    if(tablero[1][1] == tablero[2][0] && tablero[1][1] != ' ' && tablero[1][1] == *jugador && tablero[0][2] == ' ')
+    {
         *f = 1;
         *c = 3;
         return 1;
@@ -400,18 +478,25 @@ int intentarGanar(int *f, int *c, char tablero[3][3], char *jugador){
     return 0;
 }
 
-int bloquearVictoria(int *f, int *c, char tablero[3][3], char *jugador){
+int bloquearVictoria(int *f, int *c, char tablero[3][3], char *jugador)
+{
     // Verificar filas
-    for (int i = 0; i < 3; i++) {
-        if (tablero[i][0] == tablero[i][1] && tablero[i][0] != ' ' && tablero[i][0] != *jugador && tablero[i][2] == ' ') {
+    for (int i = 0; i < 3; i++)
+    {
+        if (tablero[i][0] == tablero[i][1] && tablero[i][0] != ' ' && tablero[i][0] != *jugador && tablero[i][2] == ' ')
+        {
             *f = i+1;
             *c = 3;
             return 1;
-        }else if(tablero[i][1] == tablero[i][2] && tablero[i][1] != ' ' && tablero[i][1] != *jugador && tablero[i][0] == ' '){
+        }
+        else if(tablero[i][1] == tablero[i][2] && tablero[i][1] != ' ' && tablero[i][1] != *jugador && tablero[i][0] == ' ')
+        {
             *f = i+1;
             *c = 1;
             return 1;
-        }else if(tablero[i][0] == tablero[i][2] && tablero[i][0] != ' ' && tablero[i][0] != *jugador && tablero[i][1] == ' '){
+        }
+        else if(tablero[i][0] == tablero[i][2] && tablero[i][0] != ' ' && tablero[i][0] != *jugador && tablero[i][1] == ' ')
+        {
             *f = i+1;
             *c = 2;
             return 1;
@@ -419,16 +504,22 @@ int bloquearVictoria(int *f, int *c, char tablero[3][3], char *jugador){
     }
 
     // Verificar columnas
-    for (int i = 0; i < 3; i++) {
-        if (tablero[0][i] == tablero[1][i] && tablero[0][i] != ' ' && tablero[0][i] != *jugador && tablero[2][i] == ' ') {
+    for (int i = 0; i < 3; i++)
+    {
+        if (tablero[0][i] == tablero[1][i] && tablero[0][i] != ' ' && tablero[0][i] != *jugador && tablero[2][i] == ' ')
+        {
             *f = 3;
             *c = i+1;
             return 1;
-        }else if(tablero[1][i] == tablero[2][i] && tablero[1][i] != ' ' && tablero[1][i] != *jugador && tablero[0][i] == ' '){
+        }
+        else if(tablero[1][i] == tablero[2][i] && tablero[1][i] != ' ' && tablero[1][i] != *jugador && tablero[0][i] == ' ')
+        {
             *f = 1;
             *c = i+1;
             return 1;
-        }else if(tablero[0][i] == tablero[2][i] && tablero[0][i] != ' ' && tablero[0][i] != *jugador && tablero[1][i] == ' '){
+        }
+        else if(tablero[0][i] == tablero[2][i] && tablero[0][i] != ' ' && tablero[0][i] != *jugador && tablero[1][i] == ' ')
+        {
             *f = 2;
             *c = i+1;
             return 1;
@@ -436,29 +527,34 @@ int bloquearVictoria(int *f, int *c, char tablero[3][3], char *jugador){
     }
 
     // Verificar diagonales
-    if (tablero[0][0] == tablero[1][1] && tablero[0][0] != ' ' && tablero[0][0] != *jugador && tablero[2][2] == ' ') {
+    if (tablero[0][0] == tablero[1][1] && tablero[0][0] != ' ' && tablero[0][0] != *jugador && tablero[2][2] == ' ')
+    {
         *f = 3;
         *c = 3;
         return 1;
     }
-    if(tablero[1][1] == tablero[2][2] && tablero[1][1] != ' ' && tablero[1][1] != *jugador && tablero[0][0] == ' '){
+    if(tablero[1][1] == tablero[2][2] && tablero[1][1] != ' ' && tablero[1][1] != *jugador && tablero[0][0] == ' ')
+    {
         *f = 1;
         *c = 1;
         return 1;
     }
-    if(tablero[0][0] == tablero[2][2] && tablero[0][0] != ' ' && tablero[0][0] != *jugador && tablero[1][1] == ' '){
+    if(tablero[0][0] == tablero[2][2] && tablero[0][0] != ' ' && tablero[0][0] != *jugador && tablero[1][1] == ' ')
+    {
         *f = 2;
         *c = 2;
         return 1;
     }
 
-    if (tablero[0][2] == tablero[1][1] && tablero[0][2] != ' ' && tablero[0][2] != *jugador && tablero[2][0] == ' '){
+    if (tablero[0][2] == tablero[1][1] && tablero[0][2] != ' ' && tablero[0][2] != *jugador && tablero[2][0] == ' ')
+    {
         *f = 3;
         *c = 1;
         return 1;
     }
 
-    if(tablero[1][1] == tablero[2][0] && tablero[1][1] != ' ' && tablero[1][1] != *jugador && tablero[0][2] == ' '){
+    if(tablero[1][1] == tablero[2][0] && tablero[1][1] != ' ' && tablero[1][1] != *jugador && tablero[0][2] == ' ')
+    {
         *f = 1;
         *c = 3;
         return 1;
@@ -466,37 +562,47 @@ int bloquearVictoria(int *f, int *c, char tablero[3][3], char *jugador){
     return 0;
 }
 
-int verificafilacol(int fila, int columna){
-    if(fila<1 || fila>TAM){
+int verificafilacol(int fila, int columna)
+{
+    if(fila<1 || fila>TAM)
+    {
         return 0;
     }
-    if(columna<1 || columna>TAM){
+    if(columna<1 || columna>TAM)
+    {
         return 0;
     }
     return 1;
 }
 
 // Funci�n para verificar si hay un ganador
-int verificarGanador(char tablero[3][3]) {
+int verificarGanador(char tablero[3][3])
+{
     // Verificar filas
-    for (int i = 0; i < 3; i++) {
-        if (tablero[i][0] == tablero[i][1] && tablero[i][1] == tablero[i][2] && tablero[i][0] != ' ') {
+    for (int i = 0; i < 3; i++)
+    {
+        if (tablero[i][0] == tablero[i][1] && tablero[i][1] == tablero[i][2] && tablero[i][0] != ' ')
+        {
             return 1;
         }
     }
 
     // Verificar columnas
-    for (int i = 0; i < 3; i++) {
-        if (tablero[0][i] == tablero[1][i] && tablero[1][i] == tablero[2][i] && tablero[0][i] != ' ') {
+    for (int i = 0; i < 3; i++)
+    {
+        if (tablero[0][i] == tablero[1][i] && tablero[1][i] == tablero[2][i] && tablero[0][i] != ' ')
+        {
             return 1;
         }
     }
 
     // Verificar diagonales
-    if (tablero[0][0] == tablero[1][1] && tablero[1][1] == tablero[2][2] && tablero[0][0] != ' ') {
+    if (tablero[0][0] == tablero[1][1] && tablero[1][1] == tablero[2][2] && tablero[0][0] != ' ')
+    {
         return 1;
     }
-    if (tablero[0][2] == tablero[1][1] && tablero[1][1] == tablero[2][0] && tablero[0][2] != ' ') {
+    if (tablero[0][2] == tablero[1][1] && tablero[1][1] == tablero[2][0] && tablero[0][2] != ' ')
+    {
         return 1;
     }
 
@@ -504,10 +610,14 @@ int verificarGanador(char tablero[3][3]) {
 }
 
 // Funcion para verificar si el juego termin� en empate
-int verificarEmpate(char tablero[3][3]) {
-    for (int i = 0; i < 3; i++) {
-        for (int j = 0; j < 3; j++) {
-            if (tablero[i][j] == ' ') {
+int verificarEmpate(char tablero[3][3])
+{
+    for (int i = 0; i < 3; i++)
+    {
+        for (int j = 0; j < 3; j++)
+        {
+            if (tablero[i][j] == ' ')
+            {
                 return 0;  // Hay al menos una casilla vac�a
             }
         }
@@ -515,7 +625,8 @@ int verificarEmpate(char tablero[3][3]) {
     return 1;  // No hay casillas vac�as, es empate
 }
 
-void guardarPartida(tLista *list_partidas, char tablero[TAM][TAM],int numPartida, int numJugador ,const char *ganador, int puntaje, tJugador jugador){
+void guardarPartida(tLista *list_partidas, char tablero[TAM][TAM],int numPartida, int numJugador,const char *ganador, int puntaje, tJugador jugador)
+{
     int result;
     tPartida partida;
     memcpy(partida.tablero, tablero, sizeof(partida.tablero));
@@ -526,13 +637,15 @@ void guardarPartida(tLista *list_partidas, char tablero[TAM][TAM],int numPartida
     strcpy(partida.jugador,jugador.nombre);
 
     result= ponerEnLista(list_partidas,&partida,sizeof(partida));
-    if(!result){
+    if(!result)
+    {
         printf("\nNO SE PUDO PONER EN LISTA");
         system("pause");
     }
 }
 
-int obtengoJugador(const void *a, const void *b){
+int obtengoJugador(const void *a, const void *b)
+{
     tJugador *jugadorA = (tJugador*)a;
     tJugador *jugadorB = (tJugador*)b;
     memcpy(jugadorB->nombre, jugadorA->nombre, sizeof(jugadorA->nombre));
@@ -540,7 +653,8 @@ int obtengoJugador(const void *a, const void *b){
     return 1;
 }
 
-int generarInforme(tLista *list_partidas, tLista *list_jugadores){
+int generarInforme(tLista *list_partidas, tLista *list_jugadores)
+{
     char nombrearch[40], codigoGrupo[] = "PILAR";
     int i,
         j,
@@ -553,20 +667,24 @@ int generarInforme(tLista *list_partidas, tLista *list_jugadores){
 
     FILE *pl = fopen(nombrearch,"wt");
 
-    if(!pl){
+    if(!pl)
+    {
         printf("\nError al crear el informe");
         return 0;
     }
 
     result=sacarDeLista(list_partidas,&partida,sizeof(partida));
 
-    while(result!=0){
+    while(result!=0)
+    {
         fprintf(pl,"JUGADOR: %-19s\nPartida: %d\nGanador: %-10s\nPuntaje: %d\n",partida.jugador,partida.numPartida,partida.ganador,partida.puntaje);
 
-          // Escribir el tablero de la partida
+        // Escribir el tablero de la partida
         fputs("TABLERO:\n", pl);
-        for (i = 0; i < TAM; i++) {
-            for (j = 0; j < TAM; j++) {
+        for (i = 0; i < TAM; i++)
+        {
+            for (j = 0; j < TAM; j++)
+            {
                 fprintf(pl, " %c ", partida.tablero[i][j]);
                 if (j < TAM - 1)
                     fprintf(pl, "|"); // Separadores verticales
@@ -578,14 +696,15 @@ int generarInforme(tLista *list_partidas, tLista *list_jugadores){
         fputs("-----------------------------------\n", pl);
 
         result=sacarDeLista(list_partidas,&partida,sizeof(partida));
-     }
-     generarRanking(list_jugadores, pl);
-     recorroListaYmandoDatosAPI(list_jugadores, codigoGrupo, 0, obtengoJugador);
-     fclose(pl);
-     return 0;
+    }
+    generarRanking(list_jugadores, pl);
+    recorroListaYmandoDatosAPI(list_jugadores, codigoGrupo, 0, obtengoJugador);
+    fclose(pl);
+    return 0;
 }
 
-void generarRanking(tLista *pl, FILE *pf){
+void generarRanking(tLista *pl, FILE *pf)
+{
     ordenarLista(pl, comparoPorPuntaje);
     fprintf(pf, "\tRanking\n");
     fprintf(pf,"\tNombre \tPuntos\n");
@@ -593,21 +712,25 @@ void generarRanking(tLista *pl, FILE *pf){
 
 }
 
-int comparoPorPuntaje(const void *d1, const void *d2){
+int comparoPorPuntaje(const void *d1, const void *d2)
+{
     tJugador *jug1 = (tJugador*)d1;
     tJugador *jug2 = (tJugador*)d2;
     return(jug1->puntos - jug2->puntos);
 }
 
-void imprimirTableroEnArchivo(FILE *pf, char tablero[3][3]) {
+void imprimirTableroEnArchivo(FILE *pf, char tablero[3][3])
+{
     fprintf(pf, "\n");
     fprintf(pf, "\tCol Col Col\n");
     fprintf(pf, "\t 1   2   3\n");
 
-    for (int i = 0; i < 3; i++) {
-            fprintf(pf, "Fila %d",i+1);
-            fprintf(pf, "\t");
-        for (int j = 0; j < 3; j++) {
+    for (int i = 0; i < 3; i++)
+    {
+        fprintf(pf, "Fila %d",i+1);
+        fprintf(pf, "\t");
+        for (int j = 0; j < 3; j++)
+        {
             fprintf(pf, " %c ", tablero[i][j]);
             if (j < 2) fprintf(pf, "|");
         }
@@ -617,27 +740,31 @@ void imprimirTableroEnArchivo(FILE *pf, char tablero[3][3]) {
     fprintf(pf, "\n");
 }
 
-int imprimoRanking(const void *d1, const void *d2){
+int imprimoRanking(const void *d1, const void *d2)
+{
     tJugador *jugador = (tJugador*)d1;
     printf("\t\t\t\t%s\t%-4d\n", jugador->nombre, jugador->puntos);
     return 1;
 }
 
-int imprimoRankingEnArchivo(const void *d1, const void *d2){
+int imprimoRankingEnArchivo(const void *d1, const void *d2)
+{
     FILE *pf = (FILE *)d2;
     tJugador *jugador = (tJugador*)d1;
     fprintf(pf,"\t%s\t%-4d\n", jugador->nombre, jugador->puntos);
     return 1;
 }
 
-void actualizardato(void *dest, const void *org){
+void actualizardato(void *dest, const void *org)
+{
     tJugador *jugador = (tJugador *)dest,
-             *actualizar = (tJugador *)org;
+              *actualizar = (tJugador *)org;
 
     jugador->puntos = actualizar->puntos;
 }
 
-void verJugador (const void *dato){
+void verJugador (const void *dato)
+{
     tJugador *jugador =(tJugador *) dato;
     printf("\nNOMBRE    PUNTAJE\n");
     printf("%s        %d\n", jugador->nombre, jugador->puntos);
@@ -645,7 +772,8 @@ void verJugador (const void *dato){
 
 //Funcion que verifica en cada turno si hay un ganador, devuelve 0 si no termino el juego y sino devuelve los puntos que
 //le corresponden al jugador humano.
-int finalizaJuego(char tablero[3][3], char *jugador, int *opc){
+int finalizaJuego(char tablero[3][3], char *jugador, int *opc)
+{
     int juegoTerminado = 0;
     imprimirTablero(tablero);
 
@@ -653,34 +781,31 @@ int finalizaJuego(char tablero[3][3], char *jugador, int *opc){
 
     //luego del turno se verifica si hay un ganador o empate.
 
-    if (verificarGanador(tablero)){   //Si se gano en este turno, verifica quien gano
+    if (verificarGanador(tablero))    //Si se gano en este turno, verifica quien gano
+    {
         imprimirTablero(tablero);
 
         printf("Jugador %c ha ganado\n", *jugador);
         system("pause");
-//        juegoTerminado = 1;
-//        if(band == 1){ //Si X es el humano (por la bandera=1) y el jugador ganador es la X, devuelve 3, sino -1.
-//            juegoTerminado = (*jugador == 'X')?3:-1;
-//        }
-//        else{ //Al contrario, si el humano es O (bandera = 0) y el jugador ganador es el O, devuelve 3, sino -1.
-//            juegoTerminado = (*jugador == 'O')?3:-1;
-//        }
+        juegoTerminado = (*opc == 0)?GANAR:PERDER; //si gano el humano, devuelve 3, sino -1.
 
-        juegoTerminado = (*opc == 0)?3:-1;
-
-    }else if (verificarEmpate(tablero)) {
+    }
+    else if (verificarEmpate(tablero))
+    {
         imprimirTablero(tablero);
         system("pause");
-        juegoTerminado = 2;
+        juegoTerminado = EMPATE; //si hubo empate devuelve 2.
     }
-    if (!juegoTerminado) {
-            *opc = (*opc == 1) ? 0 : 1;   // Cambia entre 1 y 0 para alternar el turno entre humano y maquina
-            *jugador = (*jugador == 'X')? 'O' : 'X';// Cambia entre X y O para alternar el turno
+    if (!juegoTerminado)
+    {
+        *opc = (*opc == 1) ? 0 : 1;   // Cambia entre 1 y 0 para alternar el turno entre humano y maquina
+        *jugador = (*jugador == 'X')? 'O' : 'X';// Cambia entre X y O para alternar el turno
     }
     return juegoTerminado; //si no hubo ganador/empate, devuelve juegoTerminado = 0 para que se juegue el siguiente turno.
 }                          //si hubo un ganador/empate, esta funcion devolvera los puntos que le corresponden al usuario.
 
-void recorroListaYmandoDatosAPI(tLista *pl, void *pd, unsigned tam, int (*accion)(const void *, const void *)){
+void recorroListaYmandoDatosAPI(tLista *pl, void *pd, unsigned tam, int (*accion)(const void *, const void *))
+{
     tJugador jugador;
     // Crear el objeto JSON ra�z
     cJSON *json_raiz = cJSON_CreateObject();
@@ -705,7 +830,8 @@ void recorroListaYmandoDatosAPI(tLista *pl, void *pd, unsigned tam, int (*accion
 
     // Convertir a cadena JSON
     char *json_str = cJSON_PrintUnformatted(json_raiz);
-    if (!json_str) {
+    if (!json_str)
+    {
         fprintf(stderr, "Error al generar JSON\n");
         cJSON_Delete(json_raiz);
         return;
@@ -714,7 +840,8 @@ void recorroListaYmandoDatosAPI(tLista *pl, void *pd, unsigned tam, int (*accion
 
     // Inicializar curl
     CURL *curl = curl_easy_init();
-    if (curl) {
+    if (curl)
+    {
         CURLcode res;
 
         // Configurar URL
@@ -738,9 +865,12 @@ void recorroListaYmandoDatosAPI(tLista *pl, void *pd, unsigned tam, int (*accion
         curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response_code);
         printf("Codigo de respuesta HTTP: %ld\n", response_code);
 
-        if (res != CURLE_OK) {
+        if (res != CURLE_OK)
+        {
             fprintf(stderr, "Error en la peticion: %s\n", curl_easy_strerror(res));
-        } else {
+        }
+        else
+        {
             printf("Datos enviados con exito\n");
         }
 
@@ -754,106 +884,112 @@ void recorroListaYmandoDatosAPI(tLista *pl, void *pd, unsigned tam, int (*accion
     free(json_str);
 }
 
-void grafica(int opc){
-    if(opc == 0){
-    printf("\n\t***************************************************************************");
-    printf("\n\t///////////////////////////////////////////////////////////////////////////");
-    printf("\n\t**                                                                       **");
-    printf("\n\t**   _________       __             _______         _________    ___     **");
-    printf("\n\t**  |___   ___||    /  \\           /   ____||      |___   ___|| |   ||   **");
-    printf("\n\t**      |  ||      / /\\ \\     __   |  ||       __      |  ||    |   ||   **");
-    printf("\n\t**      |  ||     /  __  \\   |__|| |  ||___   |__||    |  ||    |   ||   **");
-    printf("\n\t**      |__||    /__/  \\ _\\        |_______||          |__||    |___||   **");
-    printf("\n\t**                                                                       **");
-    printf("\n\t///////////////////////////////////////////////////////////////////////////");
-    printf("\n\t***************************************************************************\n\n\n");
-    printf("\t\tUn desarrollo de \"PILA\" ");
-    printf("\n\t\t\t - DELGADO MAILEN ");
-    printf("\n\t\t\t - MAMANI LUCAS ");
-    printf("\n\t\t\t - RAMIREZ KEVIN ");
-    printf("\n\t\t\t - TESTA TOMAS ");
+void grafica(int opc)
+{
+    if(opc == 0)
+    {
+        printf("\n\t***************************************************************************");
+        printf("\n\t///////////////////////////////////////////////////////////////////////////");
+        printf("\n\t**                                                                       **");
+        printf("\n\t**   _________       __             _______         _________    ___     **");
+        printf("\n\t**  |___   ___||    /  \\           /   ____||      |___   ___|| |   ||   **");
+        printf("\n\t**      |  ||      / /\\ \\     __   |  ||       __      |  ||    |   ||   **");
+        printf("\n\t**      |  ||     /  __  \\   |__|| |  ||___   |__||    |  ||    |   ||   **");
+        printf("\n\t**      |__||    /__/  \\ _\\        |_______||          |__||    |___||   **");
+        printf("\n\t**                                                                       **");
+        printf("\n\t///////////////////////////////////////////////////////////////////////////");
+        printf("\n\t***************************************************************************\n\n\n");
+        printf("\t\tUn desarrollo de \"PILA\" ");
+        printf("\n\t\t\t - DELGADO MAILEN ");
+        printf("\n\t\t\t - MAMANI LUCAS ");
+        printf("\n\t\t\t - RAMIREZ KEVIN ");
+        printf("\n\t\t\t - TESTA TOMAS ");
     }
 
-    if(opc == 1){//victoria
-    system("cls");
-    printf("\n\t************************************************************************************************");
-    printf("\n\t////////////////////////////////////////////////////////////////////////////////////////////////");
-    printf("\n\t**                                                                                            **");
-    printf("\n\t**     ___    ___   __    _______    _________    ______    ______     __        __           **");
-    printf("\n\t**     \\  \\  /  // |  || /    ___|| |___   ___|| /  __  \\  ||  _  \\   |  ||     /  \\\\         **");
-    printf("\n\t**     ___    ___   __    _______    _________    ______    ______     __        __           **");
-    printf("\n\t**     \\  \\  /  // |  || /    ___|| |___   ___|| /  __  \\  ||  _  \\   |  ||     /  \\\\         **");
-    printf("\n\t**     ___    ___   __    _______    _________    ______    ______     __        __           **");
-    printf("\n\t**     \\  \\  /  // |  || /    ___|| |___   ___|| /  __  \\  ||  _  \\   |  ||     /  \\\\         **");
-    printf("\n\t**      \\  \\/  //  |  || |   ||         |  ||    | |  | || || |_| ||  |  ||    /    \\\\        **");
-    printf("\n\t**       \\    //   |  || |  ||          |  ||    | |  | || |     //   |  ||   / /__\\ \\\\       **");
-    printf("\n\t**        \\  //    |  || |   ||___      |  ||    | |__| || ||  |\\  \\  |  ||  /   __   \\\\      **");
-    printf("\n\t**         \\//     |__||  \\______||     |__||    |______|| ||__| \\__\\ |__|| /___/  \\___\\\\     **");
-    printf("\n\t**                                                                                            **");
-    printf("\n\t////////////////////////////////////////////////////////////////////////////////////////////////");
-    printf("\n\t************************************************************************************************\n\n\n");
-    printf("\t\t\t Felicitaciones. Te has impuesto con maestria ante la IA.\n\n");
+    if(opc == 1) //victoria
+    {
+        system("cls");
+        printf("\n\t************************************************************************************************");
+        printf("\n\t////////////////////////////////////////////////////////////////////////////////////////////////");
+        printf("\n\t**                                                                                            **");
+        printf("\n\t**     ___    ___   __    _______    _________    ______    ______     __        __           **");
+        printf("\n\t**     \\  \\  /  // |  || /    ___|| |___   ___|| /  __  \\  ||  _  \\   |  ||     /  \\\\         **");
+        printf("\n\t**     ___    ___   __    _______    _________    ______    ______     __        __           **");
+        printf("\n\t**     \\  \\  /  // |  || /    ___|| |___   ___|| /  __  \\  ||  _  \\   |  ||     /  \\\\         **");
+        printf("\n\t**     ___    ___   __    _______    _________    ______    ______     __        __           **");
+        printf("\n\t**     \\  \\  /  // |  || /    ___|| |___   ___|| /  __  \\  ||  _  \\   |  ||     /  \\\\         **");
+        printf("\n\t**      \\  \\/  //  |  || |   ||         |  ||    | |  | || || |_| ||  |  ||    /    \\\\        **");
+        printf("\n\t**       \\    //   |  || |  ||          |  ||    | |  | || |     //   |  ||   / /__\\ \\\\       **");
+        printf("\n\t**        \\  //    |  || |   ||___      |  ||    | |__| || ||  |\\  \\  |  ||  /   __   \\\\      **");
+        printf("\n\t**         \\//     |__||  \\______||     |__||    |______|| ||__| \\__\\ |__|| /___/  \\___\\\\     **");
+        printf("\n\t**                                                                                            **");
+        printf("\n\t////////////////////////////////////////////////////////////////////////////////////////////////");
+        printf("\n\t************************************************************************************************\n\n\n");
+        printf("\t\t\t Felicitaciones. Te has impuesto con maestria ante la IA.\n\n");
     }
-     if(opc == 2){//Derrota
-    system("cls");
-    printf("\n\t*****************************************************************************************");
-    printf("\n\t/////////////////////////////////////////////////////////////////////////////////////////");
-    printf("\n\t**                                                                                     **");
-    printf("\n\t**     _____      ____     _____      _____     _______    _________       __          **");
-    printf("\n\t**    |     \\    |  __|| ||  _  \\   ||  _  \\   /  ___  \\  |___   ___||    /  \\\\        **");
-     printf("\n\t**     _____      ____     _____      _____     _______    _________       __          **");
-    printf("\n\t**    |     \\    |  __|| ||  _  \\   ||  _  \\   /  ___  \\  |___   ___||    /  \\\\        **");
-     printf("\n\t**     _____      ____     _____      _____     _______    _________       __          **");
-    printf("\n\t**    |     \\    |  __|| ||  _  \\   ||  _  \\   /  ___  \\  |___   ___||    /  \\\\        **");
-    printf("\n\t**    |  __  \\   |  |_   || |_| ||  || |_| ||  | |   | ||     |  ||      /    \\\\       **");
-    printf("\n\t**    | |  |  || |  __|| ||     //  ||     //  | |   | ||     |  ||     / /__\\ \\\\      **");
-    printf("\n\t**    | |__|  || |  |_   ||  |\\  \\  ||  |\\  \\  | |___| ||     |  ||    /   __   \\\\     **");
-    printf("\n\t**    |______//  |____|| ||__| \\__\\ ||__| \\__\\ |_______||     |__||   /___/  \\___\\\\    **");
-    printf("\n\t**                                                                                     **");
-    printf("\n\t**                                                                                     **");
-    printf("\n\t/////////////////////////////////////////////////////////////////////////////////////////");
-    printf("\n\t*****************************************************************************************\n\n\n");
-    printf("\t\t\t Tu oponente se impone. Vuelve a intentarlo.\n\n");
-    }
-
-    if(opc == 3){//Empate
-    system("cls");
-    printf("\n\t***************************************************************************");
-    printf("\n\t///////////////////////////////////////////////////////////////////////////");
-    printf("\n\t**                                                                       **");
-    printf("\n\t**     ____    __    __    ______       __       _________    ____       **");
-    printf("\n\t**    |   _|| |  \\  /  || |   _  \\     /  \\\\    |___  ___|| |  __||      **");
-    printf("\n\t**     ____    __    __    ______       __       _________    ____       **");
-    printf("\n\t**    |   _|| |  \\  /  || |   _  \\     /  \\\\    |___  ___|| |  __||      **");
-    printf("\n\t**     ____    __    __    ______       __       _________    ____       **");
-    printf("\n\t**    |   _|| |  \\  /  || |   _  \\     /  \\\\    |___  ___|| |  __||      **");
-    printf("\n\t**    |  |_   |   \\/   || |  |_|  ||  /    \\\\      |  ||    |  |_        **");
-    printf("\n\t**    |   _|| |        || |   ___//  / /__\\ \\\\     |  ||    |  __||      **");
-    printf("\n\t**    |  |_   |  |\\/|  || |  |      /   __   \\\\    |  ||    |  |_        **");
-    printf("\n\t**    |____|| |__|  |__|| |__|     /___/  \\___\\\\   |__||    |____||      **");
-    printf("\n\t**                                                                       **");
-    printf("\n\t**                                                                       **");
-    printf("\n\t///////////////////////////////////////////////////////////////////////////");
-    printf("\n\t***************************************************************************\n\n\n");
-    printf("\t\t\t Igualados. Nadie pudo vencer.\n\n");
+    if(opc == 2) //Derrota
+    {
+        system("cls");
+        printf("\n\t*****************************************************************************************");
+        printf("\n\t/////////////////////////////////////////////////////////////////////////////////////////");
+        printf("\n\t**                                                                                     **");
+        printf("\n\t**     _____      ____     _____      _____     _______    _________       __          **");
+        printf("\n\t**    |     \\    |  __|| ||  _  \\   ||  _  \\   /  ___  \\  |___   ___||    /  \\\\        **");
+        printf("\n\t**     _____      ____     _____      _____     _______    _________       __          **");
+        printf("\n\t**    |     \\    |  __|| ||  _  \\   ||  _  \\   /  ___  \\  |___   ___||    /  \\\\        **");
+        printf("\n\t**     _____      ____     _____      _____     _______    _________       __          **");
+        printf("\n\t**    |     \\    |  __|| ||  _  \\   ||  _  \\   /  ___  \\  |___   ___||    /  \\\\        **");
+        printf("\n\t**    |  __  \\   |  |_   || |_| ||  || |_| ||  | |   | ||     |  ||      /    \\\\       **");
+        printf("\n\t**    | |  |  || |  __|| ||     //  ||     //  | |   | ||     |  ||     / /__\\ \\\\      **");
+        printf("\n\t**    | |__|  || |  |_   ||  |\\  \\  ||  |\\  \\  | |___| ||     |  ||    /   __   \\\\     **");
+        printf("\n\t**    |______//  |____|| ||__| \\__\\ ||__| \\__\\ |_______||     |__||   /___/  \\___\\\\    **");
+        printf("\n\t**                                                                                     **");
+        printf("\n\t**                                                                                     **");
+        printf("\n\t/////////////////////////////////////////////////////////////////////////////////////////");
+        printf("\n\t*****************************************************************************************\n\n\n");
+        printf("\t\t\t Tu oponente se impone. Vuelve a intentarlo.\n\n");
     }
 
-    if(opc == 4){//Ranking
-    system("cls");
-    printf("\n\t*****************************************************************************************");
-    printf("\n\t/////////////////////////////////////////////////////////////////////////////////////////");
-    printf("\n\t**                                                                                     **");
+    if(opc == 3) //Empate
+    {
+        system("cls");
+        printf("\n\t***************************************************************************");
+        printf("\n\t///////////////////////////////////////////////////////////////////////////");
+        printf("\n\t**                                                                       **");
+        printf("\n\t**     ____    __    __    ______       __       _________    ____       **");
+        printf("\n\t**    |   _|| |  \\  /  || |   _  \\     /  \\\\    |___  ___|| |  __||      **");
+        printf("\n\t**     ____    __    __    ______       __       _________    ____       **");
+        printf("\n\t**    |   _|| |  \\  /  || |   _  \\     /  \\\\    |___  ___|| |  __||      **");
+        printf("\n\t**     ____    __    __    ______       __       _________    ____       **");
+        printf("\n\t**    |   _|| |  \\  /  || |   _  \\     /  \\\\    |___  ___|| |  __||      **");
+        printf("\n\t**    |  |_   |   \\/   || |  |_|  ||  /    \\\\      |  ||    |  |_        **");
+        printf("\n\t**    |   _|| |        || |   ___//  / /__\\ \\\\     |  ||    |  __||      **");
+        printf("\n\t**    |  |_   |  |\\/|  || |  |      /   __   \\\\    |  ||    |  |_        **");
+        printf("\n\t**    |____|| |__|  |__|| |__|     /___/  \\___\\\\   |__||    |____||      **");
+        printf("\n\t**                                                                       **");
+        printf("\n\t**                                                                       **");
+        printf("\n\t///////////////////////////////////////////////////////////////////////////");
+        printf("\n\t***************************************************************************\n\n\n");
+        printf("\t\t\t Igualados. Nadie pudo vencer.\n\n");
+    }
 
-    printf("\n\t**     _____          __        __     __     __   __     __   __     __    _______    **");
-    printf("\n\t**    ||  _  \\       /  \\\\     |  \\   |  ||  |  | /  // |  || |  \\   |  || /   ____||  **");
-    printf("\n\t**    || |_| ||     /    \\\\    |   \\  |  ||  |  |/  //  |  || |   \\  |  || |  | ____   **");
-    printf("\n\t**    ||     //    / /__\\ \\\\   |  |\\\\ |  ||  |     \\\\   |  || |  |\\\\ |  || |  ||__  || **");
-    printf("\n\t**    ||  |\\  \\   /   __   \\\\  |  |\\     ||  |      \\\\  |  || |  |\\     || |  |___| || **");
-    printf("\n\t**    ||__| \\__\\ /___/  \\___\\\\ |__| \\____||  |__|\\___\\\\ |__|| |__| \\____|| \\_______//  **");
-    printf("\n\t**                                                                                     **");
-    printf("\n\t**                                                                                     **");
-    printf("\n\t/////////////////////////////////////////////////////////////////////////////////////////");
-    printf("\n\t*****************************************************************************************\n\n\n");
-    printf("\t\t\t Cada punto cuenta, cada victoria te acerca a la cima.\n\n");
+    if(opc == 4) //Ranking
+    {
+        system("cls");
+        printf("\n\t*****************************************************************************************");
+        printf("\n\t/////////////////////////////////////////////////////////////////////////////////////////");
+        printf("\n\t**                                                                                     **");
+
+        printf("\n\t**     _____          __        __     __     __   __     __   __     __    _______    **");
+        printf("\n\t**    ||  _  \\       /  \\\\     |  \\   |  ||  |  | /  // |  || |  \\   |  || /   ____||  **");
+        printf("\n\t**    || |_| ||     /    \\\\    |   \\  |  ||  |  |/  //  |  || |   \\  |  || |  | ____   **");
+        printf("\n\t**    ||     //    / /__\\ \\\\   |  |\\\\ |  ||  |     \\\\   |  || |  |\\\\ |  || |  ||__  || **");
+        printf("\n\t**    ||  |\\  \\   /   __   \\\\  |  |\\     ||  |      \\\\  |  || |  |\\     || |  |___| || **");
+        printf("\n\t**    ||__| \\__\\ /___/  \\___\\\\ |__| \\____||  |__|\\___\\\\ |__|| |__| \\____|| \\_______//  **");
+        printf("\n\t**                                                                                     **");
+        printf("\n\t**                                                                                     **");
+        printf("\n\t/////////////////////////////////////////////////////////////////////////////////////////");
+        printf("\n\t*****************************************************************************************\n\n\n");
+        printf("\t\t\t Cada punto cuenta, cada victoria te acerca a la cima.\n\n");
     }
 }

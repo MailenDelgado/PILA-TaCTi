@@ -74,10 +74,6 @@ int imprimoRankingEnArchivo(const void *d1, const void *d2);
 
 void recorroListaYmandoDatosAPI(tLista *pl, void *pd, unsigned tam, int (*accion)(const void *, const void *));
 
-void lecturaDeConfiguracion(void); //¿donde se usa esta funcion?
-// void verRanking(void) ->esta se usa?
-//falta el prototipo de la funcion generoAPI
-
 int finalizaJuego(char tablero[3][3], char *jugador, int *opc);
 
 

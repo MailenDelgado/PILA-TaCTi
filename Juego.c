@@ -53,6 +53,7 @@ int iniciarJuego(){
     cargarConfig(NOMBRE_ARCH_CONFIG, &config);
 
     cantPartidas = config.cantPartidas;
+
     resultado = ingresoJugadores(&list_jugadores,&cantidadJugadores) ;
 
     if(!resultado) //si no se ingresaron jugadores vuelve al menu
@@ -79,7 +80,9 @@ int iniciarJuego(){
         jugador = buscarporPos(&list_jugadores,*porden); //obtener jugador
 
         for(i=0;i<cantPartidas;i++){
-            printf("\n\tTurno de: %s. Partida %d de %d", jugador->nombre,i+1,cantPartidas);
+            printf("\n\t=====================================================");
+            printf("\n\tES EL TURNO DE: %s. Partida %d de %d\n", jugador->nombre,i+1,cantPartidas);
+
             resultado = jugar(tablero);
 
             if(!resultado){
@@ -119,15 +122,20 @@ int iniciarJuego(){
 }
 
 int ingresoJugadores(tLista *list_jugadores, int *cantidad){
-    int r;
+    int r,i=1;
     tJugador jugador;
     crearLista(list_jugadores);
+    system("cls");
+    printf("\n\t\t ========================================================");
+    printf("\n\t\t|\t\t   INGRESO DE JUGADORES                  |");
+    printf("\n\t\t|\t\t   --------------------                  |");
+    printf("\n\t\t|\t Ingrese el nombre de los jugadores de su equipo.|");
+    printf("\n\t\t|\t\t Para Finalizar ingrese [0].             |");
+    printf("\n\t\t ========================================================\n\n");
 
     do
     {
-        system("cls");
-        printf("\t\t\t----------------\n");
-        printf("INGRESE EL NOMBRE DEL JUGADOR(0 PARA FINALIZAR EL INGRESO DE JUGADORES): \n");
+        printf("Jugador %d: ",i);
 
         scanf("%19s", jugador.nombre);
         jugador.puntos = 0; //inicializo todos los puntajes en 0
@@ -139,6 +147,7 @@ int ingresoJugadores(tLista *list_jugadores, int *cantidad){
               {
                 ponerEnLista(list_jugadores, &jugador, sizeof(tJugador));
                 (*cantidad)++;
+                i++;
               }else
               {
                 //system("cls");/// se puede comentar para limpie la pantalla
@@ -165,8 +174,10 @@ int sortearJugadores(tLista *list_jugadores, int cantidad, int *orden) {
     tJugador *jugador;
     sorteo(orden, cantidad);
     system("cls");
-    printf("\n\t\t\tOrden aleatorio de jugadores:\n");
-    printf("\n\t\t\t------------------------------\n");
+    printf("\n\t\t =========================================");
+    printf("\n\t\t|\tOrden aleatorio de jugadores:     |");
+    printf("\n\t\t|\t----------------------------      |");
+    printf("\n\t\t =========================================\n\n");
     for (i = 0; i < cantidad; i++) {
         jugador = (tJugador *)buscarporPos(list_jugadores,orden[i]);
         if(jugador){
@@ -198,36 +209,39 @@ void sorteo(int *indices, int n) { ///fisher yates: algoritmo de desordenamiento
 
 int jugar(char tablero[TAM][TAM]){
     int juegoTerminado = 0,
-        opc = 0,
-        band = 0;
-    char jugador = sortearSimbolo();
+        opc = 0,  //indica si juega el humano "0" o la maquina "1" a lo largo de los turnos.
+        band = 0; //guarda si el jugador es la X o el O.
+    char jugador = sortearSimbolo(); //se sortea el simbolo con el que jugará la persona. Si sale 0 es O, si sale 1 es X.
 
     while(opc != 1)
     {
-        printf("\nListo para jugar? ([1] SI, [0] no): ");
+        printf("\n\n\tListo para jugar? ([1] SI, [0] no): ");
         scanf("%d", &opc);
         if(opc==0){
-            printf("\n Volver al menu? ([1] SI, [0] no):");
+            printf("\n\tVolver al menu? ([1] SI, [0] no):");
             scanf("%d", &opc);
             if(opc==1){
                 return 0;
             }
         }
     }
+
     inicializarTablero(tablero);
 
     if (jugador == 'X') {
-        band = 1;
+        band = 1; //La bandera guarda si el jugador es la X, si esta en 0 es porque es la O. Esto es util al momento de asignar el puntaje (si gano o si perdio).
         opc = 0;  // El jugador humano juega si es su turno
-        printf("\n\t Sos la X, empezas vos\n");
-    }else{
+        printf("\n\t Sos la X. Empezas vos\n");
+    }else{ //si salio sorteado el O
         opc = 1; // El bot juega si es su turno
-        jugador ='X'; //EL BOT EMPIEZA CON LA X
-        printf("\n\t Sos el O, empieza la maquina\n");
+        jugador ='X'; //Debo cambiar a X para que el bot comience jugando con el simbolo correcto.
+        printf("\n\t Sos el O. Empieza la IA.\n");
     }
     printf("\t-------------------------\n");
+    printf("\t=====================================================\n");
     system("pause");
     system("cls");
+
     while (!juegoTerminado){
         juegoTerminado = finalizaJuego(tablero, &jugador, &opc, band);
 /*        imprimirTablero(tablero);
@@ -649,19 +663,24 @@ void verJugador (const void *dato){
     printf("%s        %d\n", jugador->nombre, jugador->puntos);
 }
 
+//Funcion que verifica en cada turno si hay un ganador, devuelve 0 si no termino el juego y sino devuelve los puntos que
+//le corresponden al jugador humano.
 int finalizaJuego(char tablero[3][3], char *jugador, int *opc, int band){
     int juegoTerminado = 0;
     imprimirTablero(tablero);
-    jugarTurno(tablero, *jugador, *opc);
-    //system("cls");
-    if (verificarGanador(tablero)){
+
+    jugarTurno(tablero, *jugador, *opc); //se juega el turno enviando con OPC quién juega.
+
+    //luego del turno se verifica si hay un ganador o empate.
+
+    if (verificarGanador(tablero)){   //Si se gano en este turno, verifica quien gano
         imprimirTablero(tablero);
         printf("Jugador %c ha ganado\n", *jugador);
         juegoTerminado = 1;
-        if(band == 1){ //X ES EL HUMANO
+        if(band == 1){ //Si X es el humano (por la bandera=1) y el jugador ganador es la X, devuelve 3, sino -1.
             juegoTerminado = (*jugador == 'X')?3:-1;
         }
-        else{
+        else{ //Al contrario, si el humano es O (bandera = 0) y el jugador ganador es el O, devuelve 3, sino -1.
             juegoTerminado = (*jugador == 'O')?3:-1;
         }
     }else if (verificarEmpate(tablero)) {
@@ -673,8 +692,8 @@ int finalizaJuego(char tablero[3][3], char *jugador, int *opc, int band){
             *opc = (*opc == 1) ? 0 : 1;   // Cambia entre 1 y 0 para alternar el turno entre humano y maquina
             *jugador = (*jugador == 'X')? 'O' : 'X';// Cambia entre X y O para alternar el turno
     }
-    return juegoTerminado;
-}
+    return juegoTerminado; //si no hubo ganador/empate, devuelve juegoTerminado = 0 para que se juegue el siguiente turno.
+}                          //si hubo un ganador/empate, esta funcion devolvera los puntos que le corresponden al usuario.
 
 
 void grafica(void){

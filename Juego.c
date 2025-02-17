@@ -9,8 +9,8 @@ void menu(void){
     {
 
         iniciarJuego();
-        system("pause");
-        system("cls");
+        pausarPantalla();
+        limpiarPantalla();
         grafica(0);
         menu();
     }
@@ -19,9 +19,8 @@ void menu(void){
 
         printf("Ver ranking equipo\n");
         recuperar_de_api();
-
-        system("pause");
-        system("cls");
+        pausarPantalla();
+        limpiarPantalla();
         grafica(0);
         menu();
     }
@@ -30,7 +29,7 @@ void menu(void){
     else
     {
         printf("Opcion incorrecta\n");
-//        system("cls"); ///lo malo de esta linea es que nunca va mostrar "Opcion incorrecta", en caso contrario comentarla
+//        limpiarPantalla(); ///lo malo de esta linea es que nunca va mostrar "Opcion incorrecta", en caso contrario comentarla
         grafica(0);
         menu();
     }
@@ -74,14 +73,14 @@ int iniciarJuego(){
     sortearJugadores(&list_jugadores,cantidadJugadores,orden);
 
     crearLista(&list_partidas);
-    system("cls");
+    limpiarPantalla();
 
     //Partidas
     do{
         jugador = buscarporPos(&list_jugadores,*porden); //obtener jugador
 
         for(i=0;i<cantPartidas;i++){
-            system("cls");
+            limpiarPantalla();
             printf("\n\t=====================================================");
             printf("\n\tES EL TURNO DE: %s. Partida %d de %d\n", jugador->nombre,i+1,cantPartidas);
 
@@ -109,7 +108,7 @@ int iniciarJuego(){
 
             jugador->puntos += resultado; //actualizo puntaje y lo muestro
             printf("\nPuntaje de %s es %d\n",jugador->nombre, jugador->puntos );
-            system("pause");
+            pausarPantalla();
 
             guardarPartida(&list_partidas,tablero,i+1,*porden,ganador,resultado,*jugador);
         }
@@ -133,7 +132,7 @@ int ingresoJugadores(tLista *list_jugadores, int *cantidad){
     int r,i=1;
     tJugador jugador;
     crearLista(list_jugadores);
-    system("cls");
+    limpiarPantalla();
     printf("\n\t\t ========================================================");
     printf("\n\t\t|\t\t   INGRESO DE JUGADORES                  |");
     printf("\n\t\t|\t\t   --------------------                  |");
@@ -158,9 +157,9 @@ int ingresoJugadores(tLista *list_jugadores, int *cantidad){
                 i++;
               }else
               {
-                //system("cls");/// se puede comentar para limpie la pantalla
+                //limpiarPantalla();/// se puede comentar para limpie la pantalla
                 printf("Ingreso por error un numero o simbolo. ingrese de vuelta un nombre\n");
-                system("pause");
+                pausarPantalla();
 
               }
         }else if(r){
@@ -181,7 +180,7 @@ int sortearJugadores(tLista *list_jugadores, int cantidad, int *orden) {
     int i;
     tJugador *jugador;
     sorteo(orden, cantidad);
-    system("cls");
+    limpiarPantalla();
     printf("\n\t\t =========================================");
     printf("\n\t\t|\tOrden aleatorio de jugadores:     |");
     printf("\n\t\t|\t----------------------------      |");
@@ -195,7 +194,7 @@ int sortearJugadores(tLista *list_jugadores, int cantidad, int *orden) {
             printf("Jugador %d: (No encontrado)",i+1); /// esta linea nunca se uso o nunca se va convocar por pantalla
         }
     }
-    system("pause");
+    pausarPantalla();
     return 1;
 }
 
@@ -246,8 +245,8 @@ int jugar(char tablero[TAM][TAM]){
     }
     printf("\t-------------------------\n");
     printf("\t=====================================================\n");
-    system("pause");
-    system("cls");
+    pausarPantalla();
+    limpiarPantalla();
 
     while (!juegoTerminado){
         juegoTerminado = finalizaJuego(tablero, &jugador, &opc);
@@ -264,7 +263,7 @@ char sortearSimbolo(void) {
 void inicializarTablero(char tablero[3][3]) {
     for (int i = 0; i < 3; i++) {
         for (int j = 0; j < 3; j++) {
-            tablero[i][j] = ' ';  // El tablero comienza vac�o
+            tablero[i][j] = ' ';  // El tablero comienza vacio
         }
     }
 }
@@ -321,12 +320,12 @@ void jugarTurno(char tablero[TAM][TAM],char jugador,int opc) {
                 printf("Ingrese un numero de fila y columna validos, separados por un espacio.\n");
             }
         }while(!r);
-        // Verificar si la casilla est� vac�a
+        // Verificar si la casilla esta vacia
         if (tablero[fila-1][columna-1] == ' ') {
             tablero[fila-1][columna-1] = jugador;
         } else {
             printf("Casilla ocupada. Intenta nuevamente.\n");
-            jugarTurno(tablero, jugador, 0);  // Reintentar si la casilla ya est� ocupada
+            jugarTurno(tablero, jugador, 0);  // Reintentar si la casilla ya esta ocupada
             return;
         }
     }
@@ -503,16 +502,16 @@ int verificarGanador(char tablero[3][3]) {
     return 0;  // No hay ganador
 }
 
-// Funcion para verificar si el juego termin� en empate
+// Funcion para verificar si el juego termino en empate
 int verificarEmpate(char tablero[3][3]) {
     for (int i = 0; i < 3; i++) {
         for (int j = 0; j < 3; j++) {
             if (tablero[i][j] == ' ') {
-                return 0;  // Hay al menos una casilla vac�a
+                return 0;  // Hay al menos una casilla vacia
             }
         }
     }
-    return 1;  // No hay casillas vac�as, es empate
+    return 1;  // No hay casillas vacias, es empate
 }
 
 void guardarPartida(tLista *list_partidas, char tablero[TAM][TAM],int numPartida, int numJugador ,const char *ganador, int puntaje, tJugador jugador){
@@ -528,7 +527,7 @@ void guardarPartida(tLista *list_partidas, char tablero[TAM][TAM],int numPartida
     result= ponerEnLista(list_partidas,&partida,sizeof(partida));
     if(!result){
         printf("\nNO SE PUDO PONER EN LISTA");
-        system("pause");
+        pausarPantalla();
     }
 }
 
@@ -657,7 +656,7 @@ int finalizaJuego(char tablero[3][3], char *jugador, int *opc){
         imprimirTablero(tablero);
 
         printf("Jugador %c ha ganado\n", *jugador);
-        system("pause");
+        pausarPantalla();
 //        juegoTerminado = 1;
 //        if(band == 1){ //Si X es el humano (por la bandera=1) y el jugador ganador es la X, devuelve 3, sino -1.
 //            juegoTerminado = (*jugador == 'X')?3:-1;
@@ -670,7 +669,7 @@ int finalizaJuego(char tablero[3][3], char *jugador, int *opc){
 
     }else if (verificarEmpate(tablero)) {
         imprimirTablero(tablero);
-        system("pause");
+        pausarPantalla();
         juegoTerminado = 2;
     }
     if (!juegoTerminado) {
@@ -682,7 +681,7 @@ int finalizaJuego(char tablero[3][3], char *jugador, int *opc){
 
 void recorroListaYmandoDatosAPI(tLista *pl, void *pd, unsigned tam, int (*accion)(const void *, const void *)){
     tJugador jugador;
-    // Crear el objeto JSON ra�z
+    // Crear el objeto JSON raiz
     cJSON *json_raiz = cJSON_CreateObject();
     cJSON_AddStringToObject(json_raiz, "CodigoGrupo", pd);
 
@@ -700,7 +699,7 @@ void recorroListaYmandoDatosAPI(tLista *pl, void *pd, unsigned tam, int (*accion
         pl = &(*pl)->sig;
     }
 
-    // Agregar el array al objeto ra�z
+    // Agregar el array al objeto raiz
     cJSON_AddItemToObject(json_raiz, "Jugadores", array_jugadores);
 
     // Convertir a cadena JSON
@@ -731,7 +730,7 @@ void recorroListaYmandoDatosAPI(tLista *pl, void *pd, unsigned tam, int (*accion
         curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
         curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
 
-        // Ejecutar la petici�n
+        // Ejecutar la peticion
         res = curl_easy_perform(curl);
 
         long response_code;
@@ -775,7 +774,7 @@ void grafica(int opc){
     }
 
     if(opc == 1){//victoria
-    system("cls");
+    limpiarPantalla();
     printf("\n\t************************************************************************************************");
     printf("\n\t////////////////////////////////////////////////////////////////////////////////////////////////");
     printf("\n\t**                                                                                            **");
@@ -795,7 +794,7 @@ void grafica(int opc){
     printf("\t\t\t Felicitaciones. Te has impuesto con maestria ante la IA.\n\n");
     }
      if(opc == 2){//Derrota
-    system("cls");
+    limpiarPantalla();
     printf("\n\t*****************************************************************************************");
     printf("\n\t/////////////////////////////////////////////////////////////////////////////////////////");
     printf("\n\t**                                                                                     **");
@@ -817,7 +816,7 @@ void grafica(int opc){
     }
 
     if(opc == 3){//Empate
-    system("cls");
+    limpiarPantalla();
     printf("\n\t***************************************************************************");
     printf("\n\t///////////////////////////////////////////////////////////////////////////");
     printf("\n\t**                                                                       **");
@@ -839,7 +838,7 @@ void grafica(int opc){
     }
 
     if(opc == 4){//Ranking
-    system("cls");
+    limpiarPantalla();
     printf("\n\t*****************************************************************************************");
     printf("\n\t/////////////////////////////////////////////////////////////////////////////////////////");
     printf("\n\t**                                                                                     **");

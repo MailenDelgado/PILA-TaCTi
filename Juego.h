@@ -4,6 +4,7 @@
 #include <time.h>
 #include "Lista.h"
 #include "config/config.h"
+#include "Sistema.h"
 #define NOMBRE_ARCH_CONFIG "config/config.txt"
 #define TAMNOMBRE 20
 #define TAM 3
@@ -79,6 +80,5 @@ void lecturaDeConfiguracion(void); //¿donde se usa esta funcion?
 //falta el prototipo de la funcion generoAPI
 
 int finalizaJuego(char tablero[3][3], char *jugador, int *opc);
-
 
 #endif // JUEGO_H_INCLUDED

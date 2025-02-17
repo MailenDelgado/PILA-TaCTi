@@ -98,7 +98,8 @@ void recuperar_de_api(void) {
         }
     }
     ordenarLista(&listaJug, comparoPorPuntaje);
-    printf("\n\t     Ranking: \n\tNombre:\tPuntos:\n");
+    grafica(4);
+    printf("\n\t\t\t\tNombre:\tPuntos:\n");
     recorroLista(&listaJug, NULL, 0, imprimoRanking);
     // Liberar memoria
     curl_easy_cleanup(curl);

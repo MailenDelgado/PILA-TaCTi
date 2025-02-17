@@ -9,8 +9,9 @@ void menu(void){
     {
 
         iniciarJuego();
+        system("pause");
         system("cls");
-        grafica();
+        grafica(0);
         menu();
     }
     else if((op == 'B') || (op == 'b'))
@@ -21,7 +22,7 @@ void menu(void){
 
         system("pause");
         system("cls");
-        grafica();
+        grafica(0);
         menu();
     }
     else if((op == 'C') || (op == 'c'))
@@ -29,8 +30,8 @@ void menu(void){
     else
     {
         printf("Opcion incorrecta\n");
-        system("cls");///lo malo de esta linea es que nunca va mostrar "Opcion incorrecta", en caso contrario comentarla
-        grafica();
+        //system("cls"); ///lo malo de esta linea es que nunca va mostrar "Opcion incorrecta", en caso contrario comentarla
+        grafica(0);
         menu();
     }
 }
@@ -80,6 +81,7 @@ int iniciarJuego(){
         jugador = buscarporPos(&list_jugadores,*porden); //obtener jugador
 
         for(i=0;i<cantPartidas;i++){
+            system("cls");
             printf("\n\t=====================================================");
             printf("\n\tES EL TURNO DE: %s. Partida %d de %d\n", jugador->nombre,i+1,cantPartidas);
 
@@ -91,18 +93,24 @@ int iniciarJuego(){
                 return 0;
             }
 
-            jugador->puntos += resultado; //actualizo puntaje y lo muestro
-            printf("\nPuntaje de %s es %d\n",jugador->nombre, jugador->puntos );
-            system("pause");
+
             if(resultado == 3){
                 strcpy(ganador,jugador->nombre);
+                grafica(1);
             }
             else if(resultado == -1){
                 strcpy(ganador,"MAQUINA");
+                grafica(2);
             }
             else{
                 strcpy(ganador,"EMPATE");
+                grafica(3);
             }
+
+            jugador->puntos += resultado; //actualizo puntaje y lo muestro
+            printf("\nPuntaje de %s es %d\n",jugador->nombre, jugador->puntos );
+            system("pause");
+
             guardarPartida(&list_partidas,tablero,i+1,*porden,ganador,resultado,*jugador);
         }
 
@@ -209,8 +217,8 @@ void sorteo(int *indices, int n) { ///fisher yates: algoritmo de desordenamiento
 
 int jugar(char tablero[TAM][TAM]){
     int juegoTerminado = 0,
-        opc = 0,  //indica si juega el humano "0" o la maquina "1" a lo largo de los turnos.
-        band = 0; //guarda si el jugador es la X o el O.
+        opc = 0;  //indica si juega el humano "0" o la maquina "1" a lo largo de los turnos.
+
     char jugador = sortearSimbolo(); //se sortea el simbolo con el que jugará la persona. Si sale 0 es O, si sale 1 es X.
 
     while(opc != 1)
@@ -229,7 +237,6 @@ int jugar(char tablero[TAM][TAM]){
     inicializarTablero(tablero);
 
     if (jugador == 'X') {
-        band = 1; //La bandera guarda si el jugador es la X, si esta en 0 es porque es la O. Esto es util al momento de asignar el puntaje (si gano o si perdio).
         opc = 0;  // El jugador humano juega si es su turno
         printf("\n\t Sos la X. Empezas vos\n");
     }else{ //si salio sorteado el O
@@ -243,7 +250,7 @@ int jugar(char tablero[TAM][TAM]){
     system("cls");
 
     while (!juegoTerminado){
-        juegoTerminado = finalizaJuego(tablero, &jugador, &opc, band);
+        juegoTerminado = finalizaJuego(tablero, &jugador, &opc);
 /*        imprimirTablero(tablero);
         jugarTurno(tablero,jugador,opc);
         if (verificarGanador(tablero)){
@@ -602,6 +609,7 @@ int generarInforme(tLista *list_partidas, tLista *list_jugadores){
      }
      generarRanking(list_jugadores, pl);
      recorroLista(list_jugadores, codigoGrupo, 0, generoAPI);
+
      fclose(pl);
      return 0;
 }
@@ -611,6 +619,7 @@ void generarRanking(tLista *pl, FILE *pf){
     fprintf(pf, "\tRanking\n");
     fprintf(pf,"\tNombre \tPuntos\n");
     recorroLista(pl, pf, 0, imprimoRankingEnArchivo);
+
 }
 
 int comparoPorPuntaje(const void *d1, const void *d2){
@@ -665,7 +674,7 @@ void verJugador (const void *dato){
 
 //Funcion que verifica en cada turno si hay un ganador, devuelve 0 si no termino el juego y sino devuelve los puntos que
 //le corresponden al jugador humano.
-int finalizaJuego(char tablero[3][3], char *jugador, int *opc, int band){
+int finalizaJuego(char tablero[3][3], char *jugador, int *opc){
     int juegoTerminado = 0;
     imprimirTablero(tablero);
 
@@ -675,17 +684,22 @@ int finalizaJuego(char tablero[3][3], char *jugador, int *opc, int band){
 
     if (verificarGanador(tablero)){   //Si se gano en este turno, verifica quien gano
         imprimirTablero(tablero);
+
         printf("Jugador %c ha ganado\n", *jugador);
-        juegoTerminado = 1;
-        if(band == 1){ //Si X es el humano (por la bandera=1) y el jugador ganador es la X, devuelve 3, sino -1.
-            juegoTerminado = (*jugador == 'X')?3:-1;
-        }
-        else{ //Al contrario, si el humano es O (bandera = 0) y el jugador ganador es el O, devuelve 3, sino -1.
-            juegoTerminado = (*jugador == 'O')?3:-1;
-        }
+        system("pause");
+//        juegoTerminado = 1;
+//        if(band == 1){ //Si X es el humano (por la bandera=1) y el jugador ganador es la X, devuelve 3, sino -1.
+//            juegoTerminado = (*jugador == 'X')?3:-1;
+//        }
+//        else{ //Al contrario, si el humano es O (bandera = 0) y el jugador ganador es el O, devuelve 3, sino -1.
+//            juegoTerminado = (*jugador == 'O')?3:-1;
+//        }
+
+        juegoTerminado = (*opc == 0)?3:-1;
+
     }else if (verificarEmpate(tablero)) {
         imprimirTablero(tablero);
-        printf("Empate. El juego ha terminado.\n");
+        system("pause");
         juegoTerminado = 2;
     }
     if (!juegoTerminado) {
@@ -696,8 +710,8 @@ int finalizaJuego(char tablero[3][3], char *jugador, int *opc, int band){
 }                          //si hubo un ganador/empate, esta funcion devolvera los puntos que le corresponden al usuario.
 
 
-void grafica(void){
-
+void grafica(int opc){
+    if(opc == 0){
     printf("\n\t***************************************************************************");
     printf("\n\t///////////////////////////////////////////////////////////////////////////");
     printf("\n\t**                                                                       **");
@@ -714,8 +728,69 @@ void grafica(void){
     printf("\n\t\t\t - MAMANI LUCAS ");
     printf("\n\t\t\t - RAMIREZ KEVIN ");
     printf("\n\t\t\t - TESTA TOMAS ");
-    printf("\n");
+    }
+    if(opc == 1){//victoria
+    system("cls");
+    printf("\n\t**********************************************************************************************");
+    printf("\n\t//////////////////////////////////////////////////////////////////////////////////////////////");
+    printf("\n\t**                                                                                          **");
+    printf("\n\t**     ___    ___   __    _______    _________    _____    ________   __       __           **");
+    printf("\n\t**     \\  \\  /  // |  || /   ____|| |___   ___|| /  __ \\  |       || |  ||    /  \\\\          **");
+     printf("\n\t**     ___    ___   __    _______    _________    _____    ________   __       __           **");
+    printf("\n\t**     \\  \\  /  // |  || /   ____|| |___   ___|| /  __ \\  |       || |  ||    /  \\\\          **");
+     printf("\n\t**     ___    ___   __    _______    _________    _____    ________   __       __           **");
+    printf("\n\t**     \\  \\  /  // |  || /   ____|| |___   ___|| /  __ \\  |       || |  ||    /  \\\\          **");
+    printf("\n\t**      \\  \\/  //  |  || |  ||          |  ||    | |  ||| |     _||  |  ||   / /\\ \\\\         **");
+    printf("\n\t**       \\    //   |  || |  ||___       |  ||    | |__||| |  |\\   \\  |  ||  /  __  \\\\        **");
+    printf("\n\t**        \\__//    |__|| |_______||     |__||    |_____|| |__| \\ __\\ |__|| /__/  \\__\\\\       **");
+    printf("\n\t**                                                                                          **");
+    printf("\n\t//////////////////////////////////////////////////////////////////////////////////////////////");
+    printf("\n\t**********************************************************************************************\n\n\n");
+    printf("\t\t\t Felicitaciones. Te has impuesto con maestria ante la IA.\n\n");
+    }
 
+     if(opc == 2){//Derrota
+    system("cls");
+    printf("\n\t*****************************************************************************************");
+    printf("\n\t/////////////////////////////////////////////////////////////////////////////////////////");
+    printf("\n\t**                                                                                     **");
+    printf("\n\t**     _____      ____     _____      _____     _______    _________       __          **");
+    printf("\n\t**    |     \\    |  __|| ||  _  \\   ||  _  \\   /  ___  \\  |___   ___||    /  \\\\        **");
+     printf("\n\t**     _____      ____     _____      _____     _______    _________       __          **");
+    printf("\n\t**    |     \\    |  __|| ||  _  \\   ||  _  \\   /  ___  \\  |___   ___||    /  \\\\        **");
+     printf("\n\t**     _____      ____     _____      _____     _______    _________       __          **");
+    printf("\n\t**    |     \\    |  __|| ||  _  \\   ||  _  \\   /  ___  \\  |___   ___||    /  \\\\        **");
+    printf("\n\t**    |  __  \\   |  |_   || |_| ||  || |_| ||  | |   | ||     |  ||      /    \\\\       **");
+    printf("\n\t**    | |  |  || |  __|| ||     //  ||     //  | |   | ||     |  ||     / /__\\ \\\\      **");
+    printf("\n\t**    | |__|  || |  |_   ||  |\\  \\  ||  |\\  \\  | |___| ||     |  ||    /   __   \\\\     **");
+    printf("\n\t**    |______//  |____|| ||__| \\__\\ ||__| \\__\\ |_______||     |__||   /___/  \\___\\\\    **");
+    printf("\n\t**                                                                                     **");
+    printf("\n\t**                                                                                     **");
+    printf("\n\t/////////////////////////////////////////////////////////////////////////////////////////");
+    printf("\n\t*****************************************************************************************\n\n\n");
+    printf("\t\t\t Tu oponente se impone. Vuelve a intentarlo.\n\n");
+    }
+
+    if(opc == 3){//Empate
+    system("cls");
+    printf("\n\t***************************************************************************");
+    printf("\n\t///////////////////////////////////////////////////////////////////////////");
+    printf("\n\t**                                                                       **");
+    printf("\n\t**     ____    __    __    ______       __       _________    ____       **");
+    printf("\n\t**    |   _|| |  \\  /  || |   _  \\     /  \\\\    |___  ___|| |  __||      **");
+    printf("\n\t**     ____    __    __    ______       __       _________    ____       **");
+    printf("\n\t**    |   _|| |  \\  /  || |   _  \\     /  \\\\    |___  ___|| |  __||      **");
+    printf("\n\t**     ____    __    __    ______       __       _________    ____       **");
+    printf("\n\t**    |   _|| |  \\  /  || |   _  \\     /  \\\\    |___  ___|| |  __||      **");
+    printf("\n\t**    |  |_   |   \\/   || |  |_|  ||  /    \\\\      |  ||    |  |_        **");
+    printf("\n\t**    |   _|| |        || |   ___//  / /__\\ \\\\     |  ||    |  __||      **");
+    printf("\n\t**    |  |_   |  |\\/|  || |  |      /   __   \\\\    |  ||    |  |_        **");
+    printf("\n\t**    |____|| |__|  |__|| |__|     /___/  \\___\\\\   |__||    |____||      **");
+    printf("\n\t**                                                                       **");
+    printf("\n\t**                                                                       **");
+    printf("\n\t///////////////////////////////////////////////////////////////////////////");
+    printf("\n\t***************************************************************************\n\n\n");
+    printf("\t\t\t Igualados. Nadie pudo vencer.\n\n");
+    }
 
 }
-

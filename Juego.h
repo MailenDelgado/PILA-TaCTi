@@ -22,7 +22,7 @@ typedef struct{
     char ganador[TAMNOMBRE];
 }tPartida;
 
-void grafica(void);
+void grafica(int opc);
 
 void menu(void);
 
@@ -78,7 +78,7 @@ void lecturaDeConfiguracion(void); //¿donde se usa esta funcion?
 // void verRanking(void) ->esta se usa?
 //falta el prototipo de la funcion generoAPI
 
-int finalizaJuego(char tablero[3][3], char *jugador, int *opc, int band);
+int finalizaJuego(char tablero[3][3], char *jugador, int *opc);
 
 
 #endif // JUEGO_H_INCLUDED

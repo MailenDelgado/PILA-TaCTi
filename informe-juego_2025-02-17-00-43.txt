@@ -1,0 +1,38 @@
+JUGADOR: maria              
+Partida: 1
+Ganador: EMPATE    
+Puntaje: 2
+TABLERO:
+ X | O | X 
+---+---+---
+ O | O | X 
+---+---+---
+ X | X | O 
+-----------------------------------
+JUGADOR: mailen             
+Partida: 1
+Ganador: EMPATE    
+Puntaje: 2
+TABLERO:
+ X | X | O 
+---+---+---
+ O | X | X 
+---+---+---
+ X | O | O 
+-----------------------------------
+JUGADOR: leo                
+Partida: 1
+Ganador: MAQUINA   
+Puntaje: -1
+TABLERO:
+ O |   | O 
+---+---+---
+   | O | X 
+---+---+---
+ X | X | X 
+-----------------------------------
+	Ranking
+	Nombre 	Puntos
+	maria	2   
+	mailen	2   
+	leo	-1  

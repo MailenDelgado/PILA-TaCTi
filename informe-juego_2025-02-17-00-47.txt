@@ -1,0 +1,14 @@
+JUGADOR: mai                
+Partida: 1
+Ganador: MAQUINA   
+Puntaje: -1
+TABLERO:
+ X |   |   
+---+---+---
+ X | O | O 
+---+---+---
+ X | X | O 
+-----------------------------------
+	Ranking
+	Nombre 	Puntos
+	mai	-1  

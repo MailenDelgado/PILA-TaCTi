@@ -34,7 +34,7 @@ void menu(void)
     else
     {
         printf("Opcion incorrecta\n");
-//        system("cls"); ///lo malo de esta linea es que nunca va mostrar "Opcion incorrecta", en caso contrario comentarla
+//      limpiarPantalla(); ///lo malo de esta linea es que nunca va mostrar "Opcion incorrecta", en caso contrario comentarla
         grafica(0);
         menu();
     }
@@ -89,8 +89,9 @@ int iniciarJuego()
     {
         jugador = buscarporPos(&list_jugadores,*porden); //obtener jugador segun su posicion en la lista
 
-        for(i=0;i<cantPartidas;i++){
-            system("cls");
+        for(i=0; i<cantPartidas; i++)
+        {
+            limpiarPantalla();
             printf("\n\t=====================================================");
             printf("\n\tES EL TURNO DE: %s. Partida %d de %d\n", jugador->nombre,i+1,cantPartidas);
 
@@ -164,17 +165,18 @@ int ingresoJugadores(tLista *list_jugadores, int *cantidad)
         jugador.puntos = 0; //inicializo todos los puntajes en 0
         r=listaLlena(list_jugadores, sizeof(tJugador));
 
-        if (!r && strcmp(jugador.nombre,"0"))  ///Si la lista no est� llena y el nombre del jugador no es 0
+        if (!r && strcmp(jugador.nombre,"0"))  ///Si la lista no esta llena y el nombre del jugador no es 0
         {
-            if((strcmp(jugador.nombre,"A") > 0 && strcmp(jugador.nombre,"Z") < 0) ||
-                    (strcmp(jugador.nombre,"a") > 0 && strcmp(jugador.nombre,"z") < 0))///si por error un nombre de un solo caracter que no sea una letra(como por ejemplo numeros y simbolos)
+            if((strcmp(jugador.nombre,"A") >= 0 && strcmp(jugador.nombre,"Z") <= 0) ||
+                    (strcmp(jugador.nombre,"a") >= 0 && strcmp(jugador.nombre,"z") <= 0))///si por error ingresa un nombre de un solo caracter que no sea una letra(como por ejemplo numeros y simbolos)
             {
                 ponerEnLista(list_jugadores, &jugador, sizeof(tJugador));
                 (*cantidad)++;
                 i++;
-              }else
-              {
-                //system("cls");/// se puede comentar para limpie la pantalla
+            }
+            else
+            {
+                //limpiarPantalla();/// se puede comentar para limpie la pantalla
                 printf("Ingreso por error un numero o simbolo. ingrese de vuelta un nombre\n");
                 pausarPantalla();
 
@@ -238,32 +240,53 @@ void sorteo(int *indices, int n)   ///fisher yates: algoritmo de desordenamiento
         j = rand() % (i + 1); //elije un indice aleatorio entre 0 e i
         temp = indices[i];
         indices[i] = indices[j];
-        indices[j] = temp; //intercambia el �ltimo con el indice elegido
+        indices[j] = temp; //intercambia el ultimo con el indice elegido
     }
 }
 
 int jugar(char tablero[TAM][TAM])
 {
     int juegoTerminado = 0,
-        opc = 0;  //indica si juega el humano "0" o la maquina "1" a lo largo de los turnos.
-
+        opc = 0,  //indica si juega el humano "0" o la maquina "1" a lo largo de los turnos.
+        entradaValida;
     char jugador = sortearSimbolo(); //se sortea el simbolo con el que jugará la persona. Si sale 0 es O, si sale 1 es X.
-
     while(opc != 1)
     {
-        printf("\n\n\tListo para jugar? ([1] SI, [0] no): ");
-        scanf("%d", &opc);
-        if(opc==0)
+        do
         {
-            printf("\n\tVolver al menu? ([1] SI, [0] no):");
-            scanf("%d", &opc);
-            if(opc==1)
+            printf("\nListo para jugar? ([1] SI, [0] NO): ");
+            entradaValida = scanf("%d", &opc);/// scanf me duelve 0 si se ingreso un caracter o un simbolo, en caso contrario me devuelve 1
+            if (entradaValida != 1 || (opc != 0 && opc != 1))
             {
-                return 0;
+                printf("Entrada invalida. Ingrese 0 o 1.\n");
+                limpiarBuffer();
+            }
+        }
+        while (entradaValida != 1 || (opc != 0 && opc != 1));   /// Se repite hasta que ingrese 0 o 1
+        if (opc == 0)
+        {
+            do
+            {
+                printf("\nVolver al menu? ([1] SI, [0] NO): ");
+                entradaValida = scanf("%d", &opc);
+                if (entradaValida != 1)
+                {
+                    printf("Entrada invalida. Ingrese 0 o 1.\n");
+                    limpiarBuffer();
+                }
+                else
+                {
+                    if(opc == 1)/// regreso al menu
+                        return 0;
+                }
+            }
+            while (entradaValida != 1 || (opc != 0 && opc != 1));   /// Se repite hasta que ingrese 0 o 1
+            if (opc == 0)
+            {
+                opc = -1;  /// Para que vuelva a preguntar "Listo para jugar?"
             }
         }
     }
-
     inicializarTablero(tablero);
 
     if (jugador == 'X')       //Si en el sorteo salio X comienza el jugando el humano opc=0
@@ -298,9 +321,12 @@ char sortearSimbolo(void)
     return (orden[0] == 0) ? 'O' : 'X'; //Si no hubo intercambio de indices entonces el usuario empieza con O, sino con X.
 }
 
-void inicializarTablero(char tablero[3][3]) {
-    for (int i = 0; i < 3; i++) {
-        for (int j = 0; j < 3; j++) {
+void inicializarTablero(char tablero[3][3])
+{
+    for (int i = 0; i < 3; i++)
+    {
+        for (int j = 0; j < 3; j++)
+        {
             tablero[i][j] = ' ';  // El tablero comienza vac�o
         }
     }
@@ -331,7 +357,8 @@ void jugarTurno(char tablero[TAM][TAM],char jugador,int opc)
 {
     int columna,
         fila,
-        r;
+        result,
+        entradaValida;
     if(opc == 1) //juega bot segun estrategias
     {
         if(intentarGanar(&fila, &columna, tablero, &jugador)== 1)
@@ -363,16 +390,31 @@ void jugarTurno(char tablero[TAM][TAM],char jugador,int opc)
         // Jugador humano: ingresar fila y columna
         do
         {
-            printf("Jugador %c, ingresa fila (1-3) y columna (1-3): ", jugador);
-            scanf("%d %d", &fila, &columna);
-            r = verificafilacol(fila,columna);
-            if(!r)
+            //por si ingresa un caracter o un simbolo por error
+            entradaValida = 0;
+            while(!entradaValida)
+            {
+                printf("Jugador %c, ingresa fila (1-3) y columna (1-3): ", jugador);
+                if((scanf("%d %d", &fila, &columna)) == 2)
+                {
+                    entradaValida = 1;
+                }
+                else
+                {
+                    limpiarBuffer();
+                }
+            }
+
+            result = verificafilacol(fila,columna);
+            if(!result)
             {
                 printf("Ingrese un numero de fila y columna validos, separados por un espacio.\n");
             }
-        }while(!r);
+        }
+        while(!result);
         // Verificar si la casilla est� vac�a
-        if (tablero[fila-1][columna-1] == ' ') {
+        if (tablero[fila-1][columna-1] == ' ')
+        {
             tablero[fila-1][columna-1] = jugador;
         }
         else
@@ -602,10 +644,14 @@ int verificarGanador(char tablero[3][3])
 }
 
 // Funcion para verificar si el juego termin� en empate
-int verificarEmpate(char tablero[3][3]) {
-    for (int i = 0; i < 3; i++) {
-        for (int j = 0; j < 3; j++) {
-            if (tablero[i][j] == ' ') {
+int verificarEmpate(char tablero[3][3])
+{
+    for (int i = 0; i < 3; i++)
+    {
+        for (int j = 0; j < 3; j++)
+        {
+            if (tablero[i][j] == ' ')
+            {
                 return 0;  // Hay al menos una casilla vac�a
             }
         }
@@ -785,7 +831,9 @@ int finalizaJuego(char tablero[3][3], char *jugador, int *opc)
 
         juegoTerminado = (*opc == 0)?3:-1;
 
-    }else if (verificarEmpate(tablero)) {
+    }
+    else if (verificarEmpate(tablero))
+    {
         imprimirTablero(tablero);
         system("pause");
         juegoTerminado = 2;
@@ -900,75 +948,79 @@ void grafica(int opc)
         printf("\n\t\t\t - TESTA TOMAS ");
     }
 
-    if(opc == 1){//victoria
-    system("cls");
-    printf("\n\t************************************************************************************************");
-    printf("\n\t////////////////////////////////////////////////////////////////////////////////////////////////");
-    printf("\n\t**                                                                                            **");
-    printf("\n\t**     ___    ___   __    _______    _________    ______    ______     __        __           **");
-    printf("\n\t**     \\  \\  /  // |  || /    ___|| |___   ___|| /  __  \\  ||  _  \\   |  ||     /  \\\\         **");
-    printf("\n\t**     ___    ___   __    _______    _________    ______    ______     __        __           **");
-    printf("\n\t**     \\  \\  /  // |  || /    ___|| |___   ___|| /  __  \\  ||  _  \\   |  ||     /  \\\\         **");
-    printf("\n\t**     ___    ___   __    _______    _________    ______    ______     __        __           **");
-    printf("\n\t**     \\  \\  /  // |  || /    ___|| |___   ___|| /  __  \\  ||  _  \\   |  ||     /  \\\\         **");
-    printf("\n\t**      \\  \\/  //  |  || |   ||         |  ||    | |  | || || |_| ||  |  ||    /    \\\\        **");
-    printf("\n\t**       \\    //   |  || |  ||          |  ||    | |  | || |     //   |  ||   / /__\\ \\\\       **");
-    printf("\n\t**        \\  //    |  || |   ||___      |  ||    | |__| || ||  |\\  \\  |  ||  /   __   \\\\      **");
-    printf("\n\t**         \\//     |__||  \\______||     |__||    |______|| ||__| \\__\\ |__|| /___/  \\___\\\\     **");
-    printf("\n\t**                                                                                            **");
-    printf("\n\t////////////////////////////////////////////////////////////////////////////////////////////////");
-    printf("\n\t************************************************************************************************\n\n\n");
-    printf("\t\t\t Felicitaciones. Te has impuesto con maestria ante la IA.\n\n");
+    if(opc == 1) //victoria
+    {
+        system("cls");
+        printf("\n\t************************************************************************************************");
+        printf("\n\t////////////////////////////////////////////////////////////////////////////////////////////////");
+        printf("\n\t**                                                                                            **");
+        printf("\n\t**     ___    ___   __    _______    _________    ______    ______     __        __           **");
+        printf("\n\t**     \\  \\  /  // |  || /    ___|| |___   ___|| /  __  \\  ||  _  \\   |  ||     /  \\\\         **");
+        printf("\n\t**     ___    ___   __    _______    _________    ______    ______     __        __           **");
+        printf("\n\t**     \\  \\  /  // |  || /    ___|| |___   ___|| /  __  \\  ||  _  \\   |  ||     /  \\\\         **");
+        printf("\n\t**     ___    ___   __    _______    _________    ______    ______     __        __           **");
+        printf("\n\t**     \\  \\  /  // |  || /    ___|| |___   ___|| /  __  \\  ||  _  \\   |  ||     /  \\\\         **");
+        printf("\n\t**      \\  \\/  //  |  || |   ||         |  ||    | |  | || || |_| ||  |  ||    /    \\\\        **");
+        printf("\n\t**       \\    //   |  || |  ||          |  ||    | |  | || |     //   |  ||   / /__\\ \\\\       **");
+        printf("\n\t**        \\  //    |  || |   ||___      |  ||    | |__| || ||  |\\  \\  |  ||  /   __   \\\\      **");
+        printf("\n\t**         \\//     |__||  \\______||     |__||    |______|| ||__| \\__\\ |__|| /___/  \\___\\\\     **");
+        printf("\n\t**                                                                                            **");
+        printf("\n\t////////////////////////////////////////////////////////////////////////////////////////////////");
+        printf("\n\t************************************************************************************************\n\n\n");
+        printf("\t\t\t Felicitaciones. Te has impuesto con maestria ante la IA.\n\n");
     }
-     if(opc == 2){//Derrota
-    system("cls");
-    printf("\n\t*****************************************************************************************");
-    printf("\n\t/////////////////////////////////////////////////////////////////////////////////////////");
-    printf("\n\t**                                                                                     **");
-    printf("\n\t**     _____      ____     _____      _____     _______    _________       __          **");
-    printf("\n\t**    |     \\    |  __|| ||  _  \\   ||  _  \\   /  ___  \\  |___   ___||    /  \\\\        **");
-     printf("\n\t**     _____      ____     _____      _____     _______    _________       __          **");
-    printf("\n\t**    |     \\    |  __|| ||  _  \\   ||  _  \\   /  ___  \\  |___   ___||    /  \\\\        **");
-     printf("\n\t**     _____      ____     _____      _____     _______    _________       __          **");
-    printf("\n\t**    |     \\    |  __|| ||  _  \\   ||  _  \\   /  ___  \\  |___   ___||    /  \\\\        **");
-    printf("\n\t**    |  __  \\   |  |_   || |_| ||  || |_| ||  | |   | ||     |  ||      /    \\\\       **");
-    printf("\n\t**    | |  |  || |  __|| ||     //  ||     //  | |   | ||     |  ||     / /__\\ \\\\      **");
-    printf("\n\t**    | |__|  || |  |_   ||  |\\  \\  ||  |\\  \\  | |___| ||     |  ||    /   __   \\\\     **");
-    printf("\n\t**    |______//  |____|| ||__| \\__\\ ||__| \\__\\ |_______||     |__||   /___/  \\___\\\\    **");
-    printf("\n\t**                                                                                     **");
-    printf("\n\t**                                                                                     **");
-    printf("\n\t/////////////////////////////////////////////////////////////////////////////////////////");
-    printf("\n\t*****************************************************************************************\n\n\n");
-    printf("\t\t\t Tu oponente se impone. Vuelve a intentarlo.\n\n");
-    }
-
-    if(opc == 3){//Empate
-    system("cls");
-    printf("\n\t***************************************************************************");
-    printf("\n\t///////////////////////////////////////////////////////////////////////////");
-    printf("\n\t**                                                                       **");
-    printf("\n\t**     ____    __    __    ______       __       _________    ____       **");
-    printf("\n\t**    |   _|| |  \\  /  || |   _  \\     /  \\\\    |___  ___|| |  __||      **");
-    printf("\n\t**     ____    __    __    ______       __       _________    ____       **");
-    printf("\n\t**    |   _|| |  \\  /  || |   _  \\     /  \\\\    |___  ___|| |  __||      **");
-    printf("\n\t**     ____    __    __    ______       __       _________    ____       **");
-    printf("\n\t**    |   _|| |  \\  /  || |   _  \\     /  \\\\    |___  ___|| |  __||      **");
-    printf("\n\t**    |  |_   |   \\/   || |  |_|  ||  /    \\\\      |  ||    |  |_        **");
-    printf("\n\t**    |   _|| |        || |   ___//  / /__\\ \\\\     |  ||    |  __||      **");
-    printf("\n\t**    |  |_   |  |\\/|  || |  |      /   __   \\\\    |  ||    |  |_        **");
-    printf("\n\t**    |____|| |__|  |__|| |__|     /___/  \\___\\\\   |__||    |____||      **");
-    printf("\n\t**                                                                       **");
-    printf("\n\t**                                                                       **");
-    printf("\n\t///////////////////////////////////////////////////////////////////////////");
-    printf("\n\t***************************************************************************\n\n\n");
-    printf("\t\t\t Igualados. Nadie pudo vencer.\n\n");
+    if(opc == 2) //Derrota
+    {
+        system("cls");
+        printf("\n\t*****************************************************************************************");
+        printf("\n\t/////////////////////////////////////////////////////////////////////////////////////////");
+        printf("\n\t**                                                                                     **");
+        printf("\n\t**     _____      ____     _____      _____     _______    _________       __          **");
+        printf("\n\t**    |     \\    |  __|| ||  _  \\   ||  _  \\   /  ___  \\  |___   ___||    /  \\\\        **");
+        printf("\n\t**     _____      ____     _____      _____     _______    _________       __          **");
+        printf("\n\t**    |     \\    |  __|| ||  _  \\   ||  _  \\   /  ___  \\  |___   ___||    /  \\\\        **");
+        printf("\n\t**     _____      ____     _____      _____     _______    _________       __          **");
+        printf("\n\t**    |     \\    |  __|| ||  _  \\   ||  _  \\   /  ___  \\  |___   ___||    /  \\\\        **");
+        printf("\n\t**    |  __  \\   |  |_   || |_| ||  || |_| ||  | |   | ||     |  ||      /    \\\\       **");
+        printf("\n\t**    | |  |  || |  __|| ||     //  ||     //  | |   | ||     |  ||     / /__\\ \\\\      **");
+        printf("\n\t**    | |__|  || |  |_   ||  |\\  \\  ||  |\\  \\  | |___| ||     |  ||    /   __   \\\\     **");
+        printf("\n\t**    |______//  |____|| ||__| \\__\\ ||__| \\__\\ |_______||     |__||   /___/  \\___\\\\    **");
+        printf("\n\t**                                                                                     **");
+        printf("\n\t**                                                                                     **");
+        printf("\n\t/////////////////////////////////////////////////////////////////////////////////////////");
+        printf("\n\t*****************************************************************************************\n\n\n");
+        printf("\t\t\t Tu oponente se impone. Vuelve a intentarlo.\n\n");
     }
 
-    if(opc == 4){//Ranking
-    system("cls");
-    printf("\n\t*****************************************************************************************");
-    printf("\n\t/////////////////////////////////////////////////////////////////////////////////////////");
-    printf("\n\t**                                                                                     **");
+    if(opc == 3) //Empate
+    {
+        system("cls");
+        printf("\n\t***************************************************************************");
+        printf("\n\t///////////////////////////////////////////////////////////////////////////");
+        printf("\n\t**                                                                       **");
+        printf("\n\t**     ____    __    __    ______       __       _________    ____       **");
+        printf("\n\t**    |   _|| |  \\  /  || |   _  \\     /  \\\\    |___  ___|| |  __||      **");
+        printf("\n\t**     ____    __    __    ______       __       _________    ____       **");
+        printf("\n\t**    |   _|| |  \\  /  || |   _  \\     /  \\\\    |___  ___|| |  __||      **");
+        printf("\n\t**     ____    __    __    ______       __       _________    ____       **");
+        printf("\n\t**    |   _|| |  \\  /  || |   _  \\     /  \\\\    |___  ___|| |  __||      **");
+        printf("\n\t**    |  |_   |   \\/   || |  |_|  ||  /    \\\\      |  ||    |  |_        **");
+        printf("\n\t**    |   _|| |        || |   ___//  / /__\\ \\\\     |  ||    |  __||      **");
+        printf("\n\t**    |  |_   |  |\\/|  || |  |      /   __   \\\\    |  ||    |  |_        **");
+        printf("\n\t**    |____|| |__|  |__|| |__|     /___/  \\___\\\\   |__||    |____||      **");
+        printf("\n\t**                                                                       **");
+        printf("\n\t**                                                                       **");
+        printf("\n\t///////////////////////////////////////////////////////////////////////////");
+        printf("\n\t***************************************************************************\n\n\n");
+        printf("\t\t\t Igualados. Nadie pudo vencer.\n\n");
+    }
+
+    if(opc == 4) //Ranking
+    {
+        system("cls");
+        printf("\n\t*****************************************************************************************");
+        printf("\n\t/////////////////////////////////////////////////////////////////////////////////////////");
+        printf("\n\t**                                                                                     **");
 
         printf("\n\t**     _____          __        __     __     __   __     __   __     __    _______    **");
         printf("\n\t**    ||  _  \\       /  \\\\     |  \\   |  ||  |  | /  // |  || |  \\   |  || /   ____||  **");

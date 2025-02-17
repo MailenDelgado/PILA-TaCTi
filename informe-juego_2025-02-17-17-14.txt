@@ -1,0 +1,26 @@
+JUGADOR: kevin              
+Partida: 1
+Ganador: MAQUINA   
+Puntaje: -1
+TABLERO:
+ X |   | O 
+---+---+---
+ O | O | X 
+---+---+---
+ O | X | X 
+-----------------------------------
+JUGADOR: lire               
+Partida: 1
+Ganador: MAQUINA   
+Puntaje: -1
+TABLERO:
+ X | O |   
+---+---+---
+   | O | X 
+---+---+---
+   | O | X 
+-----------------------------------
+	Ranking
+	Nombre 	Puntos
+	kevin	-1  
+	lire	-1  

@@ -4,6 +4,7 @@
 #include <time.h>
 #include "Lista.h"
 #include "config/config.h"
+#include "Sistema.h"
 #define NOMBRE_ARCH_CONFIG "config/config.txt"
 #define TAMNOMBRE 20
 #define TAM 3
@@ -58,8 +59,6 @@ int generarInforme(tLista *list_partidas, tLista *list_jugadores);
 
 void generarRanking(tLista *pl, FILE *pf);
 
-int mostrarJugadores(const void *, const void *);
-
 void guardarPartida(tLista *list_partidas, char tablero[TAM][TAM],int numPartida, int numJugador,const char *ganador, int puntaje, tJugador jugador);
 
 void verJugador (const void *dato);
@@ -74,11 +73,8 @@ int imprimoRanking(const void *d1, const void *d2);
 
 int imprimoRankingEnArchivo(const void *d1, const void *d2);
 
-void lecturaDeConfiguracion(void); //¿donde se usa esta funcion?
-// void verRanking(void) ->esta se usa?
-//falta el prototipo de la funcion generoAPI
+void recorroListaYmandoDatosAPI(tLista *pl, void *pd, unsigned tam, int (*accion)(const void *, const void *));
 
 int finalizaJuego(char tablero[3][3], char *jugador, int *opc);
-
 
 #endif // JUEGO_H_INCLUDED

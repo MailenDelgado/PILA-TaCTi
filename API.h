@@ -20,6 +20,5 @@ struct Memory {
 size_t write_callback(void *data, size_t size, size_t nmemb, void *userp);
 
 void recuperar_de_api(void);
-void enviar_a_api(const char *codigoGrupo, const char *nombreJugador, int puntos);
 
 #endif // API_H_INCLUDED

@@ -74,11 +74,14 @@ int imprimoRanking(const void *d1, const void *d2);
 
 int imprimoRankingEnArchivo(const void *d1, const void *d2);
 
-void lecturaDeConfiguracion(void); //¿donde se usa esta funcion?
+void lecturaDeConfiguracion(void); //ï¿½donde se usa esta funcion?
 // void verRanking(void) ->esta se usa?
 //falta el prototipo de la funcion generoAPI
 
 int finalizaJuego(char tablero[3][3], char *jugador, int *opc);
 
+void grafica(void);
+
+void limpiarBuffer(void);
 
 #endif // JUEGO_H_INCLUDED

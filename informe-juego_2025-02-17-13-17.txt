@@ -1,0 +1,14 @@
+JUGADOR: lucas              
+Partida: 1
+Ganador: MAQUINA   
+Puntaje: -1
+TABLERO:
+ O |   | O 
+---+---+---
+ X | O |   
+---+---+---
+ X | X | X 
+-----------------------------------
+	Ranking
+	Nombre 	Puntos
+	lucas	-1  

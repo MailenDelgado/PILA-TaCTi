@@ -1,0 +1,38 @@
+JUGADOR: tomas              
+Partida: 1
+Ganador: MAQUINA   
+Puntaje: -1
+TABLERO:
+   | O | X 
+---+---+---
+   | O | X 
+---+---+---
+   |   | X 
+-----------------------------------
+JUGADOR: kevin              
+Partida: 1
+Ganador: EMPATE    
+Puntaje: 2
+TABLERO:
+ X | O | X 
+---+---+---
+ X | X | O 
+---+---+---
+ O | X | O 
+-----------------------------------
+JUGADOR: mailen             
+Partida: 1
+Ganador: mailen    
+Puntaje: 3
+TABLERO:
+ O | O | X 
+---+---+---
+   | X | O 
+---+---+---
+ X |   | X 
+-----------------------------------
+	Ranking
+	Nombre 	Puntos
+	mailen	3   
+	kevin	2   
+	tomas	-1  

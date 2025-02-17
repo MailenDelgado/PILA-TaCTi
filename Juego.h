@@ -79,4 +79,6 @@ void verRanking(void);
 int finalizaJuego(char tablero[3][3], char *jugador, int *opc, int band);
 
 void grafica(void);
+
+void limpiarBuffer(void);
 #endif // JUEGO_H_INCLUDED

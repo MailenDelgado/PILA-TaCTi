@@ -212,7 +212,7 @@ void sorteo(int *indices, int n)   ///fisher yates: algoritmo de desordenamiento
         j = rand() % (i + 1); //elije un indice aleatorio entre 0 e i
         temp = indices[i];
         indices[i] = indices[j];
-        indices[j] = temp; //intercambia el �ltimo con el indice elegido
+        indices[j] = temp; //intercambia el ultimo con el indice elegido
     }
 }
 
@@ -220,29 +220,51 @@ int jugar(char tablero[TAM][TAM])
 {
     int juegoTerminado = 0,
         opc = 0,
-        band = 0;
+        band = 0,
+        entradaValida;
     char jugador = sortearSimbolo();
-
-    while(opc != 1)
+    while (opc != 1)
     {
-        printf("\nListo para jugar? ([1] SI, [0] no): ");
-        scanf("%d", &opc);
-        if(opc==0)
+        do
         {
-            printf("\n Volver al menu? ([1] SI, [0] no):");
-            scanf("%d", &opc);
-            if(opc==1)
+            printf("\nListo para jugar? ([1] SI, [0] NO): ");
+            entradaValida = scanf("%d", &opc);/// scanf me duelve 0 si se ingreso un caracter o un simbolo
+            if (entradaValida != 1 || (opc != 0 && opc != 1))
             {
-                return 0;
+                //printf("Entrada invalida. Ingrese 0 o 1.\n");
+                limpiarBuffer();
+
+            }
+        }
+        while (entradaValida != 1 || (opc != 0 && opc != 1));   /// Se repite hasta que ingrese 0 o 1
+
+        if (opc == 0)
+        {
+            do
+            {
+                printf("\nVolver al menu? ([1] SI, [0] NO): ");
+                entradaValida = scanf("%d", &opc);
+                if (entradaValida != 1)
+                {
+                    printf("Entrada invalida. Ingrese 0 o 1.\n");
+                    limpiarBuffer();
+                }
+                else
+                {
+                    if(opc == 1)/// regreso al menu
+                        return 0;
+
+                }
+            }
+            while (entradaValida != 1 || (opc != 0 && opc != 1));   // Se repite hasta que ingrese 0 o 1
+
+            if (opc == 0)
+            {
+                opc = -1;  // Para que vuelva a preguntar "Listo para jugar?"
             }
         }
     }
-//    do
-//    {
-//        printf("\nListo para jugar? ([1] SI, [0] no): ");
-//        scanf("%d", &opc);
-//
-//    }while();
+
     inicializarTablero(tablero);
 
     if (jugador == 'X')
@@ -294,7 +316,7 @@ int jugar(char tablero[TAM][TAM])
 char sortearSimbolo(void)
 {
     int orden[2];
-    sorteo(orden, 2);                    //EL PRIMER ELEMENTO ES EL SIMBOLO CON EL QUE EMPEZAR� EL USUARIO
+    sorteo(orden, 2);                    //EL PRIMER ELEMENTO ES EL SIMBOLO CON EL QUE EMPEZARO EL USUARIO
     return (orden[0] == 0) ? 'O' : 'X'; //Si no hubo intercambio de indices entonces el usuario empieza con O, sino con X.
 }
 
@@ -304,7 +326,7 @@ void inicializarTablero(char tablero[3][3])
     {
         for (int j = 0; j < 3; j++)
         {
-            tablero[i][j] = ' ';  // El tablero comienza vac�o
+            tablero[i][j] = ' ';  // El tablero comienza vacio
         }
     }
 }
@@ -334,7 +356,9 @@ void jugarTurno(char tablero[TAM][TAM],char jugador,int opc)
 {
     int columna,
         fila,
-        r;
+        r,
+        entradaValida;
+
     if(opc == 1)
     {
         if(intentarGanar(&fila, &columna, tablero, &jugador)== 1)
@@ -366,16 +390,31 @@ void jugarTurno(char tablero[TAM][TAM],char jugador,int opc)
         // Jugador: ingresar fila y columna
         do
         {
-            printf("Jugador %c, ingresa fila (1-3) y columna (1-3): ", jugador);
-            scanf("%d %d", &fila, &columna);
+            ///por si por error ingresan un caracter o un simbolo
+            entradaValida = 0;
+            while(!entradaValida)
+            {
+                printf("Jugador %c, ingresa fila (1-3) y columna (1-3): ", jugador);
+                if((scanf("%d %d", &fila, &columna)) == 2)
+                {
+                    entradaValida = 1;
+                }
+                else
+                {
+
+                    limpiarBuffer();
+                }
+            }
             r = verificafilacol(fila,columna);
             if(!r)
             {
                 printf("Ingrese un numero de fila y columna validos, separados por un espacio.\n");
+
             }
         }
         while(!r);
-        // Verificar si la casilla est� vac�a
+
+        // Verificar si la casilla esta vacia
         if (tablero[fila-1][columna-1] == ' ')
         {
             tablero[fila-1][columna-1] = jugador;
@@ -383,6 +422,7 @@ void jugarTurno(char tablero[TAM][TAM],char jugador,int opc)
         else
         {
             printf("Casilla ocupada. Intenta nuevamente.\n");
+            system("cls");
             jugarTurno(tablero, jugador, 0);  // Reintentar si la casilla ya est� ocupada
             return;
         }
@@ -572,7 +612,7 @@ int verificafilacol(int fila, int columna)
     return 1;
 }
 
-// Funci�n para verificar si hay un ganador
+// Funcion para verificar si hay un ganador
 int verificarGanador(char tablero[3][3])
 {
     // Verificar filas
@@ -606,7 +646,7 @@ int verificarGanador(char tablero[3][3])
     return 0;  // No hay ganador
 }
 
-// Funci�n para verificar si el juego termin� en empate
+// Funcion para verificar si el juego termino en empate
 int verificarEmpate(char tablero[3][3])
 {
     for (int i = 0; i < 3; i++)
@@ -615,11 +655,11 @@ int verificarEmpate(char tablero[3][3])
         {
             if (tablero[i][j] == ' ')
             {
-                return 0;  // Hay al menos una casilla vac�a
+                return 0;  // Hay al menos una casilla vacia
             }
         }
     }
-    return 1;  // No hay casillas vac�as, es empate
+    return 1;  // No hay casillas vacias, es empate
 }
 
 void guardarPartida(tLista *list_partidas, char tablero[TAM][TAM],int numPartida, int numJugador,const char *ganador, int puntaje, tJugador jugador)
@@ -829,3 +869,9 @@ void grafica(void)
 
 }
 
+
+void limpiarBuffer()
+{
+    char caracterInvalido;
+    while ((caracterInvalido = getchar()) != '\n' && caracterInvalido != EOF);
+}

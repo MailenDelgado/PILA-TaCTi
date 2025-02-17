@@ -3,7 +3,7 @@
 
 void menu(void){
     char op;
-    printf("\nElija una opcion: \n[A]Jugar\n[B]Ver ranking equipo\n[C]Salir\n");
+    printf("\n\tElija una opcion: \n\t[A]Jugar\n\t[B]Ver ranking equipo\n\t[C]Salir\n");
     scanf("%s", &op);
     if(op == 'A' || op == 'a')
     {
@@ -30,7 +30,7 @@ void menu(void){
     else
     {
         printf("Opcion incorrecta\n");
-        //system("cls"); ///lo malo de esta linea es que nunca va mostrar "Opcion incorrecta", en caso contrario comentarla
+//        system("cls"); ///lo malo de esta linea es que nunca va mostrar "Opcion incorrecta", en caso contrario comentarla
         grafica(0);
         menu();
     }
@@ -251,30 +251,6 @@ int jugar(char tablero[TAM][TAM]){
 
     while (!juegoTerminado){
         juegoTerminado = finalizaJuego(tablero, &jugador, &opc);
-/*        imprimirTablero(tablero);
-        jugarTurno(tablero,jugador,opc);
-        if (verificarGanador(tablero)){
-            imprimirTablero(tablero);
-            printf("Jugador %c ha ganado\n", jugador);
-            juegoTerminado = 1;
-
-            if(band==1){ //X ES EL HUMANO
-                return (jugador == 'X')?3:-1;
-            }
-            else{
-                return (jugador == 'O')?3:-1;
-            }
-
-        }else if (verificarEmpate(tablero)) {
-            imprimirTablero(tablero);
-            printf("Empate. El juego ha terminado.\n");
-            juegoTerminado = 1;
-            return 2;
-        }
-        if (!juegoTerminado) {
-            opc = (opc == 1) ? 0 : 1;   // Cambia entre 1 y 0 para alternar el turno entre humano y maquina
-            jugador = (jugador == 'X')? 'O' : 'X';// Cambia entre X y O para alternar el turno
-        }*/
     }
     return juegoTerminado;
 }
@@ -527,7 +503,7 @@ int verificarGanador(char tablero[3][3]) {
     return 0;  // No hay ganador
 }
 
-// Funci�n para verificar si el juego termin� en empate
+// Funcion para verificar si el juego termin� en empate
 int verificarEmpate(char tablero[3][3]) {
     for (int i = 0; i < 3; i++) {
         for (int j = 0; j < 3; j++) {
@@ -556,15 +532,11 @@ void guardarPartida(tLista *list_partidas, char tablero[TAM][TAM],int numPartida
     }
 }
 
-int mostrarJugadores(const void *a, const void *b){
-   tJugador * jug = (tJugador *)a;
-   enviar_a_api((char*)b, jug->nombre, jug->puntos);
-   return 1;
-}
-
-int generoAPI(const void *a, const void *b){
-    tJugador *jugador = (tJugador*)a;
-    enviar_a_api((char*)b,jugador->nombre, jugador->puntos);
+int obtengoJugador(const void *a, const void *b){
+    tJugador *jugadorA = (tJugador*)a;
+    tJugador *jugadorB = (tJugador*)b;
+    memcpy(jugadorB->nombre, jugadorA->nombre, sizeof(jugadorA->nombre));
+    jugadorB->puntos = jugadorA->puntos;
     return 1;
 }
 
@@ -608,8 +580,7 @@ int generarInforme(tLista *list_partidas, tLista *list_jugadores){
         result=sacarDeLista(list_partidas,&partida,sizeof(partida));
      }
      generarRanking(list_jugadores, pl);
-     recorroLista(list_jugadores, codigoGrupo, 0, generoAPI);
-
+     recorroListaYmandoDatosAPI(list_jugadores, codigoGrupo, 0, obtengoJugador);
      fclose(pl);
      return 0;
 }
@@ -709,6 +680,79 @@ int finalizaJuego(char tablero[3][3], char *jugador, int *opc){
     return juegoTerminado; //si no hubo ganador/empate, devuelve juegoTerminado = 0 para que se juegue el siguiente turno.
 }                          //si hubo un ganador/empate, esta funcion devolvera los puntos que le corresponden al usuario.
 
+void recorroListaYmandoDatosAPI(tLista *pl, void *pd, unsigned tam, int (*accion)(const void *, const void *)){
+    tJugador jugador;
+    // Crear el objeto JSON ra�z
+    cJSON *json_raiz = cJSON_CreateObject();
+    cJSON_AddStringToObject(json_raiz, "CodigoGrupo", pd);
+
+    // Crear el array "Jugadores"
+    cJSON *array_jugadores = cJSON_CreateArray();
+
+    while(*pl)
+    {
+        accion((*pl)->info, &jugador);
+        cJSON *json_jugador = cJSON_CreateObject();
+        cJSON_AddStringToObject(json_jugador, "nombre", (const char * const)&jugador.nombre);
+        cJSON_AddNumberToObject(json_jugador, "puntos", jugador.puntos);
+        // Agregar el jugador al array
+        cJSON_AddItemToArray(array_jugadores, json_jugador);
+        pl = &(*pl)->sig;
+    }
+
+    // Agregar el array al objeto ra�z
+    cJSON_AddItemToObject(json_raiz, "Jugadores", array_jugadores);
+
+    // Convertir a cadena JSON
+    char *json_str = cJSON_PrintUnformatted(json_raiz);
+    if (!json_str) {
+        fprintf(stderr, "Error al generar JSON\n");
+        cJSON_Delete(json_raiz);
+        return;
+    }
+    printf("JSON enviado:\n%s\n", json_str);
+
+    // Inicializar curl
+    CURL *curl = curl_easy_init();
+    if (curl) {
+        CURLcode res;
+
+        // Configurar URL
+        curl_easy_setopt(curl, CURLOPT_URL, URL_API);
+        curl_easy_setopt(curl, CURLOPT_POST, 1L);
+
+        // Configurar headers (indicamos que enviamos JSON)
+        struct curl_slist *headers = NULL;
+        headers = curl_slist_append(headers, "Content-Type: application/json");
+        curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
+
+        // Configurar datos a enviar
+        curl_easy_setopt(curl, CURLOPT_POSTFIELDS, json_str);
+        curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
+        curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
+
+        // Ejecutar la petici�n
+        res = curl_easy_perform(curl);
+
+        long response_code;
+        curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response_code);
+        printf("Codigo de respuesta HTTP: %ld\n", response_code);
+
+        if (res != CURLE_OK) {
+            fprintf(stderr, "Error en la peticion: %s\n", curl_easy_strerror(res));
+        } else {
+            printf("Datos enviados con exito\n");
+        }
+
+        // Liberar recursos
+        curl_slist_free_all(headers);
+        curl_easy_cleanup(curl);
+    }
+
+    // Liberar memoria JSON
+    cJSON_Delete(json_raiz);
+    free(json_str);
+}
 
 void grafica(int opc){
     if(opc == 0){

@@ -58,8 +58,6 @@ int generarInforme(tLista *list_partidas, tLista *list_jugadores);
 
 void generarRanking(tLista *pl, FILE *pf);
 
-int mostrarJugadores(const void *, const void *);
-
 void guardarPartida(tLista *list_partidas, char tablero[TAM][TAM],int numPartida, int numJugador,const char *ganador, int puntaje, tJugador jugador);
 
 void verJugador (const void *dato);
@@ -73,6 +71,8 @@ void imprimirTableroEnArchivo(FILE *pf, char tablero[3][3]);
 int imprimoRanking(const void *d1, const void *d2);
 
 int imprimoRankingEnArchivo(const void *d1, const void *d2);
+
+void recorroListaYmandoDatosAPI(tLista *pl, void *pd, unsigned tam, int (*accion)(const void *, const void *));
 
 void lecturaDeConfiguracion(void); //¿donde se usa esta funcion?
 // void verRanking(void) ->esta se usa?
